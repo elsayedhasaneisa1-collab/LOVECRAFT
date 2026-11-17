@@ -1,0 +1,11 @@
+{
+  "componentGroup": "hero",
+  "variantKey": "minimal",
+  "nameAr": "بساطة تحريرية راقية Minimal",
+  "nameEn": "Minimal",
+  "descriptionAr": "مساحات متوازنة وتكوين طباعي نظيف يركز الانتباه على الرسالة.",
+  "githubPath": "templates/shared-components/hero/minimal.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 8
+}

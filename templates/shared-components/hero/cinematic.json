@@ -1,0 +1,11 @@
+{
+  "componentGroup": "hero",
+  "variantKey": "cinematic",
+  "nameAr": "مقدمة سينمائية ملحمية",
+  "nameEn": "Cinematic",
+  "descriptionAr": "مشهد افتتاحي واسع بإضاءة درامية وظهور متدرج للعنوان الرئيسي.",
+  "githubPath": "templates/shared-components/hero/cinematic.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 1
+}

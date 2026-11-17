@@ -1,0 +1,11 @@
+{
+  "componentGroup": "hero",
+  "variantKey": "split-screen",
+  "nameAr": "تقسيم مزدوج متوازن Split Screen",
+  "nameEn": "Split Screen",
+  "descriptionAr": "جانب بصري غني للصورة الرئيسية مقابل جانب طباعي متكامل.",
+  "githubPath": "templates/shared-components/hero/split-screen.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 9
+}

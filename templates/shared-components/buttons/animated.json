@@ -1,0 +1,11 @@
+{
+  "componentGroup": "button",
+  "variantKey": "animated",
+  "nameAr": "زر بلمعة متحركة",
+  "nameEn": "Animated",
+  "descriptionAr": "شعاع ضوئي يعبر الزر بنعومة لجذب التفاعل.",
+  "githubPath": "templates/shared-components/buttons/animated.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 5
+}

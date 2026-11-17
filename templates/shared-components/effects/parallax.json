@@ -1,0 +1,11 @@
+{
+  "componentGroup": "effect",
+  "variantKey": "parallax",
+  "nameAr": "حركة العمق البصري Parallax",
+  "nameEn": "Parallax",
+  "descriptionAr": "استجابة سلسة لحركة التمرير تمنح الصفحة بعداً إضافياً.",
+  "githubPath": "templates/shared-components/effects/parallax.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 8
+}

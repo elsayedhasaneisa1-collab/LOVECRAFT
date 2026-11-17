@@ -1,0 +1,11 @@
+{
+  "componentGroup": "gallery",
+  "variantKey": "memory-gallery",
+  "nameAr": "ألبوم بولارويد الذكريات",
+  "nameEn": "Memory Gallery",
+  "descriptionAr": "صور بإطارات فورية كلاسيكية مائلة قليلاً مع تعليقات مكتوبة.",
+  "githubPath": "templates/shared-components/gallery/memory-gallery.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 8
+}

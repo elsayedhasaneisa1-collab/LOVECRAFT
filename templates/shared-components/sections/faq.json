@@ -1,0 +1,11 @@
+{
+  "componentGroup": "section",
+  "variantKey": "faq",
+  "nameAr": "أسئلة وإجابات قابلة للطي",
+  "nameEn": "FAQ",
+  "descriptionAr": "قائمة تفاعلية تفتح الإجابة بسلاسة عند النقر.",
+  "githubPath": "templates/shared-components/sections/faq.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 6
+}

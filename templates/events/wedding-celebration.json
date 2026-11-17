@@ -1,0 +1,26 @@
+{
+  "slug": "wedding-celebration",
+  "category": "events",
+  "nameAr": "زفاف",
+  "nameEn": "Royal Wedding",
+  "version": "1.0.0",
+  "previewImage": "/images/cat-events.jpg",
+  "experienceType": "celebration-rsvp",
+  "tier": "premium",
+  "dependencies": ["motion-engine", "canvas-confetti"],
+  "compatibility": {
+    "browsers": ["Chrome", "Safari", "Edge", "Firefox", "Samsung Internet", "Opera", "Android", "iOS"],
+    "responsive": true,
+    "reducedMotion": true,
+    "webglFallback": true
+  },
+  "defaultComponents": {
+    "hero": "cinematic",
+    "background": "golden",
+    "typography": "cinematic-text",
+    "button": "gradient",
+    "gallery": "cinematic",
+    "sections": ["countdown", "timeline", "contact", "final-surprise"],
+    "effects": ["stars", "particles", "scroll-reveal"]
+  }
+}

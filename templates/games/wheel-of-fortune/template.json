@@ -1,0 +1,146 @@
+{
+  "format": 1,
+  "version": "1.0.0",
+  "slug": "wheel-of-fortune",
+  "category": "games",
+  "title": {
+    "ar": "عجلة الحظ",
+    "en": "Wheel of Fortune"
+  },
+  "descriptionAr": "عجلة حظ فيزيائية ملونة تدور بانسيابية وتتوقف على هديتك أو رسالتك المكتوبة.",
+  "experienceType": "lucky-wheel",
+  "previewImage": "/images/cat-games.jpg",
+  "tier": "free",
+  "creditCost": 1,
+  "order": 8,
+  "fields": [
+    {
+      "key": "recipientName",
+      "labelAr": "اسم المُهدى إليه",
+      "promptAr": "👤 أرسل اسم الشخص المُهدى إليه الموقع:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "نور"
+    },
+    {
+      "key": "senderName",
+      "labelAr": "اسم المُرسِل",
+      "promptAr": "✍️ أرسل اسمك كما سيظهر في توقيع الموقع:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "أحمد"
+    },
+    {
+      "key": "headline",
+      "labelAr": "العنوان الرئيسي للموقع",
+      "promptAr": "🏷️ أرسل العنوان الرئيسي الذي يتصدر واجهة الموقع:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "عجلة الحظ"
+    },
+    {
+      "key": "mainMessage",
+      "labelAr": "الرسالة الأساسية",
+      "promptAr": "💌 أرسل رسالتك الكاملة التي تود عرضها داخل الموقع:",
+      "type": "textarea",
+      "required": true,
+      "placeholderAr": "اكتب كلماتك الصادقة هنا..."
+    },
+    {
+      "key": "eventDate",
+      "labelAr": "التاريخ المميز",
+      "promptAr": "📅 أرسل التاريخ المرتبط بالمناسبة بصيغة YYYY-MM-DD (أو اختر التخطي):",
+      "type": "date",
+      "required": false,
+      "placeholderAr": "2026-05-20"
+    },
+    {
+      "key": "finalSurpriseText",
+      "labelAr": "رسالة المشهد الختامي",
+      "promptAr": "🎁 أرسل عبارة المفاجأة الختامية التي تظهر في نهاية التجربة:",
+      "type": "textarea",
+      "required": false,
+      "placeholderAr": "دمتَ أجمل ما في الأيام!"
+    },
+    {
+      "key": "wheelItems",
+      "labelAr": "خيارات عجلة الحظ (مفصولة بفاصلة)",
+      "promptAr": "🎡 أرسل خيارات عجلة الحظ مفصولة بفاصلة (مثال: دعوة عشاء، هدية مفاجئة، رحلة قريبة، رسالة خاصة):",
+      "type": "list",
+      "required": false,
+      "placeholderAr": "دعوة عشاء فاخرة، هدية مفاجئة، قهوة على حسابي، أمنية محققة، يوم مغامرة، رسالة من القلب"
+    }
+  ],
+  "config": {
+    "paletteId": "royal-gold",
+    "themeColors": {
+      "primary": "#d97706",
+      "secondary": "#fbbf24",
+      "accent": "#fef08a",
+      "background": "#0c0a09",
+      "surface": "#1c1917",
+      "text": "#fafaf9",
+      "mode": "dark"
+    },
+    "componentsConfig": {
+      "hero": "3d",
+      "background": "golden",
+      "typography": "3d-text",
+      "button": "3d",
+      "gallery": "grid",
+      "sections": [
+        "gift-box",
+        "final-surprise"
+      ],
+      "effects": [
+        "fireworks",
+        "confetti",
+        "3d-objects"
+      ],
+      "introStyle": "portal",
+      "liteModeDefault": false
+    },
+    "musicTrack": "joyful-chimes",
+    "sampleCustomFields": {
+      "wheelSlices": [
+        "دعوة عشاء فاخرة",
+        "هدية مفاجئة",
+        "قهوة وحلوى معاً",
+        "أمنية من اختيارك",
+        "نزهة عند الغروب",
+        "الجائزة الكبرى"
+      ]
+    },
+    "experienceType": "lucky-wheel"
+  },
+  "dependencies": [
+    "three",
+    "canvas-confetti"
+  ],
+  "compatibility": {
+    "browsers": [
+      "Chrome 90+",
+      "Safari 14+",
+      "Edge 90+",
+      "Firefox 88+",
+      "Samsung Internet 15+",
+      "Opera 76+",
+      "Android WebView",
+      "iOS Safari 14+"
+    ],
+    "responsive": [
+      "mobile-first",
+      "tablet",
+      "desktop"
+    ],
+    "inputs": [
+      "touch",
+      "mouse",
+      "keyboard"
+    ],
+    "reducedMotion": true,
+    "webglFallback": true,
+    "liteMode": true
+  },
+  "footer": "shared-global"
+}

@@ -1,0 +1,11 @@
+{
+  "componentGroup": "typography",
+  "variantKey": "reveal",
+  "nameAr": "كشف انسيابي متدرج",
+  "nameEn": "Reveal",
+  "descriptionAr": "ظهور ناعم من الأسفل مع تلاشي ضبابي راقٍ.",
+  "githubPath": "templates/shared-components/typography/reveal.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 2
+}

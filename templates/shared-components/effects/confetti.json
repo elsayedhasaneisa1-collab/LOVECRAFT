@@ -1,0 +1,11 @@
+{
+  "componentGroup": "effect",
+  "variantKey": "confetti",
+  "nameAr": "قصاصات الاحتفال الملونة",
+  "nameEn": "Confetti",
+  "descriptionAr": "انطلاق مبهج لقصاصات الاحتفال عند فتح المفاجآت.",
+  "githubPath": "templates/shared-components/effects/confetti.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 1
+}

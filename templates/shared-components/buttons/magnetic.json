@@ -1,0 +1,11 @@
+{
+  "componentGroup": "button",
+  "variantKey": "magnetic",
+  "nameAr": "زر مغناطيسي تفاعلي",
+  "nameEn": "Magnetic",
+  "descriptionAr": "ينجذب بلطف نحو مؤشر الفأرة بحركة فيزيائية مرنة.",
+  "githubPath": "templates/shared-components/buttons/magnetic.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 7
+}

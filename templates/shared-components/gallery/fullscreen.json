@@ -1,0 +1,11 @@
+{
+  "componentGroup": "gallery",
+  "variantKey": "fullscreen",
+  "nameAr": "عارض ملء الشاشة Fullscreen",
+  "nameEn": "Fullscreen",
+  "descriptionAr": "معرض مع نافذة عرض غامرة بكامل الشاشة ودعم لوحة المفاتيح.",
+  "githubPath": "templates/shared-components/gallery/fullscreen.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 9
+}

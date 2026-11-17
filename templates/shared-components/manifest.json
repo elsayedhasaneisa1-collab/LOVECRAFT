@@ -1,0 +1,25 @@
+{
+  "repository": "elsayedhasaneisa1-collab/LOVECRAFT",
+  "engine": "lovecraft-multi-tenant-renderer",
+  "schemaVersion": "1.0.0",
+  "globalFooterEnforced": true,
+  "executeUntrustedCode": false,
+  "categories": [
+    "templates/love",
+    "templates/events",
+    "templates/friends",
+    "templates/games",
+    "templates/portfolio",
+    "templates/messages"
+  ],
+  "sharedComponentsPath": "templates/shared-components/manifest.json",
+  "componentGroups": {
+    "hero": 10,
+    "background": 12,
+    "typography": 8,
+    "button": 10,
+    "gallery": 9,
+    "section": 16,
+    "effect": 10
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "componentGroup": "effect",
+  "variantKey": "particles",
+  "nameAr": "تفاعل الجزيئات المضيئة",
+  "nameEn": "Particles",
+  "descriptionAr": "ذرات ضوئية تحيط بالعناصر التفاعلية.",
+  "githubPath": "templates/shared-components/effects/particles.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 2
+}

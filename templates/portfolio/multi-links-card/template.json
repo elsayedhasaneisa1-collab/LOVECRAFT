@@ -1,0 +1,199 @@
+{
+  "format": 1,
+  "version": "1.1.0",
+  "slug": "multi-links-card",
+  "category": "portfolio",
+  "title": {
+    "ar": "صفحة روابط متعددة",
+    "en": "Multi-Link Creator Card"
+  },
+  "descriptionAr": "صفحة روابط سريعة وخفيفة لصنّاع المحتوى والمتاجر مع أزرار تفاعلية جذابة.",
+  "experienceType": "links-showcase",
+  "previewImage": "/images/cat-portfolio.jpg",
+  "tier": "free",
+  "creditCost": 1,
+  "order": 14,
+  "fields": [
+    {
+      "key": "recipientName",
+      "labelAr": "الاسم أو العلامة",
+      "promptAr": "👤 أرسل اسمك الكامل أو اسم علامتك الإبداعية:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "كريم المنصور"
+    },
+    {
+      "key": "senderName",
+      "labelAr": "التوقيع أو المدينة",
+      "promptAr": "✍️ أرسل المدينة أو التوقيع التعريفي المختصر:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "القاهرة — استوديو رقمي"
+    },
+    {
+      "key": "headline",
+      "labelAr": "العنوان الرئيسي للموقع",
+      "promptAr": "🏷️ أرسل العنوان الرئيسي الذي يتصدر واجهة الموقع:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "صفحة روابط متعددة"
+    },
+    {
+      "key": "mainMessage",
+      "labelAr": "النبذة التعريفية",
+      "promptAr": "📝 أرسل النبذة التعريفية عنك وعن أبرز أعمالك وخدماتك:",
+      "type": "textarea",
+      "required": true,
+      "placeholderAr": "اكتب كلماتك الصادقة هنا..."
+    },
+    {
+      "key": "eventDate",
+      "labelAr": "التاريخ المميز",
+      "promptAr": "📅 أرسل التاريخ المرتبط بالمناسبة بصيغة YYYY-MM-DD (أو اختر التخطي):",
+      "type": "date",
+      "required": false,
+      "placeholderAr": "2026-05-20"
+    },
+    {
+      "key": "finalSurpriseText",
+      "labelAr": "رسالة المشهد الختامي",
+      "promptAr": "🎁 أرسل عبارة المفاجأة الختامية التي تظهر في نهاية التجربة:",
+      "type": "textarea",
+      "required": false,
+      "placeholderAr": "دمتَ أجمل ما في الأيام!"
+    },
+    {
+      "key": "roleTitle",
+      "labelAr": "المسمى المهني أو التخصص",
+      "promptAr": "💼 أرسل المسمى المهني أو شعار المشروع (مثال: مصمم تجارب رقمية وهويات بصرية):",
+      "type": "text",
+      "required": false,
+      "placeholderAr": "مصمم تجارب رقمية وهويات بصرية"
+    },
+    {
+      "key": "contactHandle",
+      "labelAr": "رابط أو بريد التواصل",
+      "promptAr": "🔗 أرسل البريد الإلكتروني أو اسم المستخدم للتواصل:",
+      "type": "text",
+      "required": false,
+      "placeholderAr": "hello@studio.example"
+    },
+    {
+      "key": "profileLinks",
+      "labelAr": "روابط الحسابات",
+      "promptAr": "أدخل الروابط، رابطًا في كل سطر بهذا الشكل: اسم الحساب | https://example.com/profile",
+      "type": "textarea",
+      "required": false,
+      "placeholderAr": "المعرض | https://www.behance.net/your-profile"
+    }
+  ],
+  "config": {
+    "paletteId": "emerald-oasis",
+    "themeColors": {
+      "primary": "#10b981",
+      "secondary": "#34d399",
+      "accent": "#fbbf24",
+      "background": "#05110d",
+      "surface": "#0b221a",
+      "text": "#ecfdf5",
+      "mode": "dark"
+    },
+    "componentsConfig": {
+      "hero": "minimal",
+      "background": "particles",
+      "typography": "gradient-text",
+      "button": "svg-icons",
+      "gallery": "grid",
+      "sections": [
+        "social-links",
+        "features",
+        "contact"
+      ],
+      "effects": [
+        "particles",
+        "smooth-transitions"
+      ],
+      "introStyle": "minimal-fade",
+      "liteModeDefault": false
+    },
+    "musicTrack": "creative-pulse",
+    "sampleCustomFields": {
+      "roleTitle": "تصميم تجارب رقمية وهويات بصرية متكاملة",
+      "contactHandle": "studio@lovecraft.example",
+      "stats": [
+        {
+          "label": "مشروعاً منجزاً",
+          "value": "+48"
+        },
+        {
+          "label": "سنوات خبرة",
+          "value": "6"
+        },
+        {
+          "label": "عميلاً سعيداً",
+          "value": "+35"
+        }
+      ],
+      "highlights": [
+        {
+          "title": "تصميم الواجهات والتجربة",
+          "desc": "بناء منتجات رقمية واضحة، سريعة، ومتقنة التفاصيل على كل الشاشات."
+        },
+        {
+          "title": "الهوية البصرية الكاملة",
+          "desc": "صياغة حضور بصري متماسك يعبّر عن جوهر العلامة ويبقى في الذاكرة."
+        },
+        {
+          "title": "التطوير التفاعلي الحديث",
+          "desc": "تحويل الأفكار إلى مواقع حية بأداء فائق وحركات مدروسة."
+        }
+      ],
+      "links": [
+        {
+          "label": "معرض الأعمال الكامل — Behance",
+          "tag": "Portfolio"
+        },
+        {
+          "label": "المشاريع البرمجية — GitHub",
+          "tag": "Code"
+        },
+        {
+          "label": "الحساب المهني — LinkedIn",
+          "tag": "Network"
+        },
+        {
+          "label": "اليوميات البصرية — Instagram",
+          "tag": "Visuals"
+        }
+      ]
+    },
+    "experienceType": "links-showcase"
+  },
+  "dependencies": [],
+  "compatibility": {
+    "browsers": [
+      "Chrome 90+",
+      "Safari 14+",
+      "Edge 90+",
+      "Firefox 88+",
+      "Samsung Internet 15+",
+      "Opera 76+",
+      "Android WebView",
+      "iOS Safari 14+"
+    ],
+    "responsive": [
+      "mobile-first",
+      "tablet",
+      "desktop"
+    ],
+    "inputs": [
+      "touch",
+      "mouse",
+      "keyboard"
+    ],
+    "reducedMotion": true,
+    "webglFallback": true,
+    "liteMode": true
+  },
+  "footer": "shared-global"
+}

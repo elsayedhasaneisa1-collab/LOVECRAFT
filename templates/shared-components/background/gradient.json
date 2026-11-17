@@ -1,0 +1,11 @@
+{
+  "componentGroup": "background",
+  "variantKey": "gradient",
+  "nameAr": "تدرج لوني مخملي",
+  "nameEn": "Gradient",
+  "descriptionAr": "انتقال لوني ناعم ومتناغم مع ألوان القالب.",
+  "githubPath": "templates/shared-components/background/gradient.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 1
+}

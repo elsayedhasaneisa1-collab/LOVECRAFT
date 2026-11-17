@@ -1,0 +1,11 @@
+{
+  "componentGroup": "gallery",
+  "variantKey": "cinematic",
+  "nameAr": "شريط سينمائي عريض",
+  "nameEn": "Cinematic",
+  "descriptionAr": "كادرات 21:9 بإضاءة محيطية وتعليق شاعري أسفل كل مشهد.",
+  "githubPath": "templates/shared-components/gallery/cinematic.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 6
+}

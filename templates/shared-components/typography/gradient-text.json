@@ -1,0 +1,11 @@
+{
+  "componentGroup": "typography",
+  "variantKey": "gradient-text",
+  "nameAr": "نص متدرج لامع",
+  "nameEn": "Gradient Text",
+  "descriptionAr": "تدرج لوني معدني منساب عبر حروف العنوان.",
+  "githubPath": "templates/shared-components/typography/gradient-text.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 5
+}

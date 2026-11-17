@@ -1,0 +1,11 @@
+{
+  "componentGroup": "section",
+  "variantKey": "audio",
+  "nameAr": "مشغّل الرسالة الصوتية والموسيقى",
+  "nameEn": "Audio",
+  "descriptionAr": "موجات صوتية تفاعلية تعمل حصرياً عند ضغط الزائر.",
+  "githubPath": "templates/shared-components/sections/audio.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 10
+}

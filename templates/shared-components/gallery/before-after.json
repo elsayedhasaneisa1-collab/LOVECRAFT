@@ -1,0 +1,11 @@
+{
+  "componentGroup": "gallery",
+  "variantKey": "before-after",
+  "nameAr": "مقارنة قبل وبعد التفاعلية",
+  "nameEn": "Before/After",
+  "descriptionAr": "شريط سحب تفاعلي للمقارنة بين لحظتين أو تصميمين.",
+  "githubPath": "templates/shared-components/gallery/before-after.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 5
+}

@@ -1,0 +1,11 @@
+{
+  "componentGroup": "typography",
+  "variantKey": "animated-headings",
+  "nameAr": "عناوين حيوية متحركة",
+  "nameEn": "Animated Headings",
+  "descriptionAr": "عناوين مزودة بخط زخرفي متحرك يبرز النقاط الجوهرية.",
+  "githubPath": "templates/shared-components/typography/animated-headings.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 8
+}

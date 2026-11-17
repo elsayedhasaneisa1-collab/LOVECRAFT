@@ -1,0 +1,11 @@
+{
+  "componentGroup": "gallery",
+  "variantKey": "3d-gallery",
+  "nameAr": "معرض المنظور ثلاثي الأبعاد",
+  "nameEn": "3D Gallery",
+  "descriptionAr": "بطاقات مائلة في الفضاء ثلاثي الأبعاد تستجيب للتفاعل.",
+  "githubPath": "templates/shared-components/gallery/3d-gallery.json",
+  "supportsLiteMode": true,
+  "requires3d": true,
+  "sortOrder": 4
+}

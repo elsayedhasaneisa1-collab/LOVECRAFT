@@ -1,0 +1,11 @@
+{
+  "componentGroup": "effect",
+  "variantKey": "smooth-transitions",
+  "nameAr": "انتقالات حريرية بين المشاهد",
+  "nameEn": "Smooth Transitions",
+  "descriptionAr": "تحولات سلسة بين المقدمة والأقسام والمشهد الختامي.",
+  "githubPath": "templates/shared-components/effects/smooth-transitions.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 10
+}

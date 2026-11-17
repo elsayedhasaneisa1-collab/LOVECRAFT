@@ -1,0 +1,11 @@
+{
+  "componentGroup": "button",
+  "variantKey": "interactive",
+  "nameAr": "زر نبضي تفاعلي",
+  "nameEn": "Interactive",
+  "descriptionAr": "موجة تفاعلية عند الضغط مع استجابة بصرية فورية.",
+  "githubPath": "templates/shared-components/buttons/interactive.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 10
+}

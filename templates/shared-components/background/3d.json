@@ -1,0 +1,11 @@
+{
+  "componentGroup": "background",
+  "variantKey": "3d",
+  "nameAr": "فضاء ثلاثي الأبعاد Three.js",
+  "nameEn": "3D",
+  "descriptionAr": "مشهد WebGL حقيقي بمجسمات وجسيمات ثلاثية الأبعاد مع بديل تلقائي.",
+  "githubPath": "templates/shared-components/background/3d.json",
+  "supportsLiteMode": true,
+  "requires3d": true,
+  "sortOrder": 7
+}

@@ -1,0 +1,26 @@
+{
+  "slug": "love-confession",
+  "category": "love",
+  "nameAr": "اعتراف بالحب",
+  "nameEn": "Love Confession",
+  "version": "1.0.0",
+  "previewImage": "/images/cat-love.jpg",
+  "experienceType": "envelope-letter",
+  "tier": "free",
+  "dependencies": ["motion-engine"],
+  "compatibility": {
+    "browsers": ["Chrome", "Safari", "Edge", "Firefox", "Samsung Internet", "Opera", "Android", "iOS"],
+    "responsive": true,
+    "reducedMotion": true,
+    "webglFallback": true
+  },
+  "defaultComponents": {
+    "hero": "cinematic",
+    "background": "floating-hearts",
+    "typography": "typewriter",
+    "button": "glass",
+    "gallery": "memory-gallery",
+    "sections": ["interactive-messages", "audio", "final-surprise"],
+    "effects": ["floating-hearts", "scroll-reveal", "smooth-transitions"]
+  }
+}

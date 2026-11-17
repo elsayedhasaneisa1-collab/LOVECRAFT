@@ -1,0 +1,11 @@
+{
+  "componentGroup": "background",
+  "variantKey": "nature",
+  "nameAr": "نسيم الطبيعة والشفق",
+  "nameEn": "Nature",
+  "descriptionAr": "إضاءة عضوية هادئة مستوحاة من الحدائق وساعة الغروب.",
+  "githubPath": "templates/shared-components/background/nature.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 12
+}

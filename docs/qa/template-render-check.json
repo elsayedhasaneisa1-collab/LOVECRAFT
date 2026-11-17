@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-11-17T19:55:50.713Z",
+  "scope": "Published built-in routes: HTTP status, React hydration, non-empty heading, viewport overflow, shared footer text and uncaught browser errors. This is not physical-device or external-service certification.",
+  "templates": 110,
+  "engines": [
+    {
+      "engine": "chromium",
+      "version": "159.0.8154.6",
+      "passed": 110,
+      "failed": 0,
+      "viewport": "1366×880",
+      "reducedMotion": true
+    },
+    {
+      "engine": "firefox",
+      "version": "159.0",
+      "passed": 110,
+      "failed": 0,
+      "viewport": "1366×880",
+      "reducedMotion": true
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "passed": 110,
+      "failed": 0,
+      "viewport": "390×844",
+      "reducedMotion": true
+    }
+  ]
+}

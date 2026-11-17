@@ -1,0 +1,11 @@
+{
+  "componentGroup": "gallery",
+  "variantKey": "masonry",
+  "nameAr": "فسيفساء فنية Masonry",
+  "nameEn": "Masonry",
+  "descriptionAr": "توزيع حر بارتفاعات متنوعة يشبه المعارض الفنية.",
+  "githubPath": "templates/shared-components/gallery/masonry.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 2
+}

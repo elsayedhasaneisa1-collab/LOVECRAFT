@@ -1,0 +1,11 @@
+{
+  "componentGroup": "background",
+  "variantKey": "space",
+  "nameAr": "سديم الفضاء العميق",
+  "nameEn": "Space",
+  "descriptionAr": "سدم كونية زرقاء وبنفسجية مع شُهب خفيفة.",
+  "githubPath": "templates/shared-components/background/space.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 10
+}

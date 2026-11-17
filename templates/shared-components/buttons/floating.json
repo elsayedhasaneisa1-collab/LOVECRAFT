@@ -1,0 +1,11 @@
+{
+  "componentGroup": "button",
+  "variantKey": "floating",
+  "nameAr": "زر عائم بظل ناعم",
+  "nameEn": "Floating",
+  "descriptionAr": "كبسولة دائرية مرتفعة بظل محيطي متوازن.",
+  "githubPath": "templates/shared-components/buttons/floating.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 8
+}

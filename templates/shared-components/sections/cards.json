@@ -1,0 +1,11 @@
+{
+  "componentGroup": "section",
+  "variantKey": "cards",
+  "nameAr": "بطاقات اللحظات المميزة",
+  "nameEn": "Cards",
+  "descriptionAr": "مجموعة بطاقات مصممة بعناية لعرض الرسائل أو الخدمات.",
+  "githubPath": "templates/shared-components/sections/cards.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 2
+}

@@ -1,0 +1,11 @@
+{
+  "componentGroup": "section",
+  "variantKey": "countdown",
+  "nameAr": "عداد الأيام واللحظات",
+  "nameEn": "Countdown",
+  "descriptionAr": "عداد حي يحسب الوقت المتبقي للمناسبة أو المنقضي منذ البداية.",
+  "githubPath": "templates/shared-components/sections/countdown.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 4
+}

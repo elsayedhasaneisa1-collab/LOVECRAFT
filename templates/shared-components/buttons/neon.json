@@ -1,0 +1,11 @@
+{
+  "componentGroup": "button",
+  "variantKey": "neon",
+  "nameAr": "زر نيون مضيء",
+  "nameEn": "Neon",
+  "descriptionAr": "إطار متوهج يستجيب فوراً عند التمرير واللمس.",
+  "githubPath": "templates/shared-components/buttons/neon.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 2
+}

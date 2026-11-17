@@ -1,0 +1,11 @@
+{
+  "componentGroup": "hero",
+  "variantKey": "parallax",
+  "nameAr": "طبقات العمق المتحرك Parallax",
+  "nameEn": "Parallax",
+  "descriptionAr": "طبقات متعددة تتحرك بسرعات متباينة عند التمرير لإحساس غامر بالعمق.",
+  "githubPath": "templates/shared-components/hero/parallax.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 4
+}
