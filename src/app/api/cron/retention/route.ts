@@ -4,6 +4,8 @@ import { flushVisits } from "@/lib/analytics";
 import { getAdminSession } from "@/lib/admin-auth";
 import { constantTimeCompare, getClientIp, logAdminAudit, logSecurityEvent } from "@/lib/security";
 
+export const maxDuration = 60;
+
 /**
  * Housekeeping job: prunes data that is no longer needed and flushes buffered analytics.
  * Run it daily. The credit ledger and referral history are intentionally never pruned.

@@ -11,6 +11,7 @@ import {
 } from "@/db";
 import { requireOwnerApi } from "@/lib/admin-auth";
 import { getClientIp, logAdminAudit, sanitizePlainText } from "@/lib/security";
+import { hasBlobStorage } from "@/lib/site-media";
 
 export async function GET(req: NextRequest) {
   const auth = await requireOwnerApi(req);
@@ -43,18 +44,17 @@ export async function GET(req: NextRequest) {
 
   // NEVER expose raw secret values or tokens — return boolean presence flags only!
   const envStatus = {
-    telegramBotTokenConfigured: Boolean(process.env.TELEGRAM_BOT_TOKEN?.trim()),
-    telegramWebhookSecretConfigured: Boolean(process.env.TELEGRAM_WEBHOOK_SECRET?.trim()),
     botApiSecretConfigured: Boolean(process.env.BOT_API_SECRET?.trim()),
     githubTokenConfigured: Boolean(process.env.GITHUB_TOKEN?.trim()),
-    catboxUserhashConfigured: Boolean(process.env.CATBOX_USERHASH?.trim()),
+    vercelBlobConfigured: hasBlobStorage(),
+    qrSigningConfigured: (process.env.QR_SIGNING_SECRET?.trim() || process.env.BOT_API_SECRET?.trim() || "").length >= 32,
     cronSecretConfigured: Boolean(process.env.CRON_SECRET?.trim()),
     databaseConnected: true,
   };
 
   return NextResponse.json({
     botSettings: bot,
-    systemSettings: sys,
+    systemSettings: sys ? { ...sys, maxUploadMb: Math.min(sys.maxUploadMb, 4) } : sys,
     envStatus,
     auditLogs: audits,
     securityEvents: secEvents,
@@ -89,7 +89,7 @@ const SettingsPatchSchema = z.discriminatedUnion("section", [
     githubRepo: z.string().min(1).max(80).regex(/^[a-zA-Z0-9_.-]+$/),
     githubBranch: z.string().min(1).max(60).regex(/^[a-zA-Z0-9/_.-]+$/),
     githubSyncEnabled: z.boolean(),
-    maxUploadMb: z.number().int().min(1).max(10),
+    maxUploadMb: z.number().int().min(1).max(4),
     apiRateLimitPerMin: z.number().int().min(15).max(600),
     loginMaxAttempts: z.number().int().min(3).max(15),
     loginLockoutMinutes: z.number().int().min(5).max(180),

@@ -204,7 +204,7 @@ export function AdminDashboardView({ admin }: AdminProps) {
     githubRepo: "LOVECRAFT",
     githubBranch: "main",
     githubSyncEnabled: true,
-    maxUploadMb: 8,
+    maxUploadMb: 4,
     apiRateLimitPerMin: 60,
     loginMaxAttempts: 5,
     loginLockoutMinutes: 15,
@@ -1664,7 +1664,7 @@ export function AdminDashboardView({ admin }: AdminProps) {
                     [
                       ["siteCreationEnabled", "تفعيل إنشاء المواقع الجديدة"],
                       ["continuousSitesEnabled", "تفعيل المواقع المستمرة الأسبوعية"],
-                      ["catboxUploadsEnabled", "تفعيل رفع الصور عبر Catbox"],
+                      ["catboxUploadsEnabled", "تفعيل رفع الصور عبر Vercel Blob"],
                       ["musicFeatureEnabled", "تفعيل الموسيقى الاختيارية"],
                       ["effects3dEnabled", "تفعيل مؤثرات 3D المتقدمة"],
                       ["notificationsEnabled", "تفعيل إشعارات البوت"],
@@ -1713,7 +1713,7 @@ export function AdminDashboardView({ admin }: AdminProps) {
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <h2 className="inline-flex items-center gap-2 text-sm font-bold">
                       <FolderGit2 className="h-4 w-4" />
-                      تكامل GitHub وCatbox والدومين والحماية
+                      تكامل GitHub وVercel Blob والدومين والحماية
                     </h2>
                     <div className="flex gap-2">
                       <button
@@ -1766,11 +1766,11 @@ export function AdminDashboardView({ admin }: AdminProps) {
                       />
                     </label>
                     <label className="space-y-1 text-xs">
-                      <span className="opacity-70">حد صور Catbox (MB)</span>
+                      <span className="opacity-70">حد الصور (MB، أقصى قيمة 4)</span>
                       <input
                         type="number"
                         min={1}
-                        max={10}
+                        max={4}
                         value={sysForm.maxUploadMb}
                         onChange={(e) =>
                           setSysForm({ ...sysForm, maxUploadMb: Number(e.target.value) })
@@ -1814,11 +1814,10 @@ export function AdminDashboardView({ admin }: AdminProps) {
                     <div className="flex flex-wrap gap-2 text-[11px]">
                       {[
                         ["databaseConnected", "PostgreSQL"],
-                        ["telegramBotTokenConfigured", "TELEGRAM_BOT_TOKEN"],
-                        ["telegramWebhookSecretConfigured", "WEBHOOK_SECRET"],
                         ["botApiSecretConfigured", "BOT_API_SECRET"],
                         ["githubTokenConfigured", "GITHUB_TOKEN"],
-                        ["catboxUserhashConfigured", "CATBOX_USERHASH"],
+                        ["vercelBlobConfigured", "Vercel Blob"],
+                        ["qrSigningConfigured", "QR_SIGNING_SECRET"],
                         ["cronSecretConfigured", "CRON_SECRET"],
                       ].map(([k, label]) => (
                         <span

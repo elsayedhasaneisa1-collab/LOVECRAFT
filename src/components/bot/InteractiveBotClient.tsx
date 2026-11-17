@@ -9,6 +9,7 @@ import {
   Send,
   UserCheck,
 } from "lucide-react";
+import { MAX_SITE_IMAGE_BYTES } from "@/lib/upload-limits";
 
 interface InlineButton {
   text: string;
@@ -170,6 +171,7 @@ export function InteractiveBotClient({
   const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !profile) return;
+    if (file.size > MAX_SITE_IMAGE_BYTES) { setUploadAlert("الحد الأقصى للصورة 4 ميجابايت."); e.target.value = ""; return; }
     setUploading(true);
     setUploadAlert(null);
     try {
@@ -179,13 +181,13 @@ export function InteractiveBotClient({
       form.append("telegramChatId", String(profile.telegramUserId));
       form.append("firstName", profile.firstName);
 
-      const res = await fetch("/api/upload/catbox", {
+      const res = await fetch("/api/upload/photo", {
         method: "POST",
         body: form,
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
-        setUploadAlert(data.error || "فشل رفع الصورة إلى Catbox.");
+        setUploadAlert(data.error || "فشل رفع الصورة.");
       } else {
         await callEngine(profile, {
           actionType: "photo_uploaded",
@@ -193,7 +195,7 @@ export function InteractiveBotClient({
         });
       }
     } catch {
-      setUploadAlert("تعذر الاتصال بخدمة رفع الصور Catbox.");
+      setUploadAlert("تعذر الاتصال بخدمة رفع الصور.");
     } finally {
       setUploading(false);
       e.target.value = "";
@@ -369,14 +371,14 @@ export function InteractiveBotClient({
           )}
         </div>
 
-        {/* Input Composer (for wizard answers & Catbox photo upload) */}
+        {/* Input Composer (for wizard answers & Vercel Blob photo upload) */}
         <form
           onSubmit={handleSendText}
           className="flex items-center gap-2 border-t border-white/[0.08] bg-[#17212b] px-4 py-3"
         >
           {view?.awaiting_input === "photo_or_skip" && (
             <label
-              title="رفع صورة إلى Catbox"
+              title="رفع صورة"
               className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-sky-600 px-3.5 py-2.5 text-xs font-semibold text-white transition hover:bg-sky-500"
             >
               {uploading ? (

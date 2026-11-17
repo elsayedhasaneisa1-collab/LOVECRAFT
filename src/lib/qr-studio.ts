@@ -4,6 +4,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import QRCode from "qrcode";
 import sharp from "sharp";
+import qrTypeface from "./qr-typeface.json";
 
 /**
  * LOVECRAFT QR Studio
@@ -13,7 +14,7 @@ import sharp from "sharp";
  */
 
 /** Bump whenever the artwork geometry changes so cached cards are regenerated. */
-export const QR_RENDER_VERSION = "v7";
+export const QR_RENDER_VERSION = "v8";
 
 export type QrShapeKey =
   | "love"
@@ -144,8 +145,8 @@ export function themeForCategory(categorySlug: string): QrTheme {
 
 /** The brand asset lives in the repository root and is mirrored into assets/ for bundling. */
 export const WATERMARK_SOURCES = [
-  path.join(process.cwd(), "assets", "watermark.png"),
   path.join(process.cwd(), "watermark.png"),
+  path.join(process.cwd(), "assets", "watermark.png"),
 ];
 
 /** A writable cache directory that works on both a normal server and serverless runtimes. */
@@ -187,12 +188,21 @@ export async function ensureWatermarkFile(): Promise<string | null> {
   }
 }
 
-function escapeXml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+// Convert text to trusted glyph outlines so PNG output does not depend on fonts
+// installed in a particular serverless runtime. The source font license is in assets/.
+function qrText(text: string, x: number, y: number, fontSize: number, fill: string, options: { bold?: boolean; center?: boolean; tracking?: number; opacity?: number } = {}) {
+  const font = options.bold ? qrTypeface.bold : qrTypeface.regular;
+  const glyphs = font.glyphs as unknown as Record<string, [number, string]>;
+  const scale = fontSize / font.units;
+  const tracking = (options.tracking ?? 0) / scale;
+  let offset = 0;
+  const paths = Array.from(text).map((c) => {
+    const [advance, path] = Object.hasOwn(glyphs, c) ? glyphs[c] : glyphs['?'];
+    const svg = path ? `<path d="${path}" transform="translate(${offset} 0)"/>` : "";
+    offset += advance + tracking;
+    return svg;
+  }).join("");
+  return `<g fill="${fill}" opacity="${options.opacity ?? 1}" transform="translate(${options.center ? x - (offset - tracking) * scale / 2 : x} ${y}) scale(${scale} ${-scale})">${paths}</g>`;
 }
 
 const asciiOnly = (value: string) => /^[\x20-\x7E]+$/.test(value);
@@ -270,8 +280,8 @@ export function buildQrSvg(params: {
     );
   }
 
-  const handleText = escapeXml(handle.startsWith("@") ? handle : `@${handle}`);
-  const titleText = asciiOnly(title) ? escapeXml(title.slice(0, 42)) : "YOUR MOMENTS · YOUR WEBSITE";
+  const handleText = (handle.startsWith("@") ? handle : `@${handle}`).slice(0, 33);
+  const titleText = asciiOnly(title) ? title.slice(0, 42) : "YOUR MOMENTS · YOUR WEBSITE";
 
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${canvas}" height="1360" viewBox="0 0 ${canvas} 1360">
   <defs>
@@ -297,8 +307,8 @@ export function buildQrSvg(params: {
     ${theme.outline ?? theme.silhouette}
   </g>
 
-  <text x="${canvas / 2}" y="92" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="34" font-weight="bold" letter-spacing="9" fill="${theme.secondary}">LOVECRAFT</text>
-  <text x="${canvas / 2}" y="130" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="20" letter-spacing="5" fill="#FFFFFF" opacity="0.72">${titleText}</text>
+  ${qrText("LOVECRAFT", canvas / 2, 92, 34, theme.secondary, { bold: true, center: true, tracking: 9 })}
+  ${qrText(titleText, canvas / 2, 130, 20, "#FFFFFF", { center: true, tracking: 5, opacity: 0.72 })}
 
   <rect x="${panelX}" y="${panelY}" width="${panel}" height="${panel}" rx="54" fill="${theme.surface}" filter="url(#shadow)"/>
 
@@ -311,10 +321,18 @@ export function buildQrSvg(params: {
         ? `<image x="0" y="-58" width="86" height="86" xlink:href="${params.watermarkDataUri}" preserveAspectRatio="xMidYMid meet"/>`
         : ""
     }
-    <text x="106" y="-24" font-family="DejaVu Sans, sans-serif" font-size="30" font-weight="bold" fill="#FFFFFF">${handleText}</text>
-    <text x="106" y="14" font-family="DejaVu Sans, sans-serif" font-size="19" letter-spacing="3" fill="#FFFFFF" opacity="0.7">SCAN TO OPEN YOUR SITE</text>
+    ${qrText(handleText, 106, -24, 30, "#FFFFFF", { bold: true })}
+    ${qrText("SCAN TO OPEN YOUR SITE", 106, 14, 19, "#FFFFFF", { tracking: 3, opacity: 0.7 })}
   </g>
 </svg>`;
+}
+
+// Serverless delivery is independent of the filesystem. The disk-cached helper below
+// remains for the offline visual QA script only.
+export async function renderQrPng(params: { url: string; theme: QrTheme; title: string; handle: string }) {
+  const watermark = await loadWatermark();
+  const svg = buildQrSvg({ ...params, watermarkDataUri: watermark?.dataUri ?? null });
+  return sharp(Buffer.from(svg)).png({ compressionLevel: 6 }).toBuffer();
 }
 
 export interface QrArtifact {

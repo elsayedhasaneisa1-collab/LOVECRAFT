@@ -1,300 +1,256 @@
-"""
-LOVECRAFT BOT — Production Telegram Bot (Python + aiogram 3)
-Your Moments. Your Website.
-
-Rules enforced:
-- End-users ONLY (zero admin/owner commands inside Telegram Bot).
-- Strictly InlineKeyboardMarkup ONLY (no ReplyKeyboardMarkup anywhere).
-- Edits existing messages in place (edit_text / edit_media) to avoid chat clutter.
-- Uploads photos to Catbox via secured backend API (stores URL only).
-- Supports both continuous Polling and Webhook deployment modes.
-"""
+"""FastAPI + aiogram webhook for Vercel. There is no polling loop or local session store."""
 import asyncio
+from html import escape
+import hmac
 import io
+import json
 import logging
-from typing import Any, Dict, Optional
+from urllib.parse import urlsplit
 
-from aiohttp import web
-from aiogram import Bot, Dispatcher, F, Router
-from aiogram.client.default import DefaultBotProperties
+from aiohttp import ClientError
+from aiogram import Bot, Dispatcher, F
+from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.enums import ParseMode
-from aiogram.exceptions import TelegramBadRequest
-from aiogram.filters import CommandStart, CommandObject
-from aiogram.types import (
-    CallbackQuery,
-    InputMediaPhoto,
-    Message,
-)
-from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+from aiogram.exceptions import TelegramAPIError, TelegramBadRequest
+from aiogram.types import BufferedInputFile, CallbackQuery, InputMediaPhoto, LinkPreviewOptions, Message, Update
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+from pydantic import ValidationError
 
-from config import load_config
-from api_client import LovecraftBackendClient
+from api_client import BackendError, LovecraftBackendClient, MAX_PHOTO_BYTES
+from config import ConfigurationError, load_config
 from keyboards import build_inline_keyboard
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-)
-logger = logging.getLogger("lovecraft.bot")
-
-router = Router(name="lovecraft_user_router")
-
-# Tracks each chat's active panel message ID so text/photo steps edit in place
-_active_panel_message: Dict[int, int] = {}
-
-MAX_PHOTO_BYTES = 8 * 1024 * 1024  # 8 MB
+app = FastAPI(title="LOVECRAFT Telegram webhook", docs_url=None, redoc_url=None, openapi_url=None)
+dispatcher = Dispatcher(disable_fsm=True)
+log = logging.getLogger("lovecraft.telegram")
+NO_PREVIEW = LinkPreviewOptions(is_disabled=True)
+ALLOWED_MIME = {"image/jpeg", "image/png", "image/webp", "image/gif"}
 
 
-async def render_response_on_callback(cb: CallbackQuery, view: Dict[str, Any]) -> None:
-    """Updates current bot message via edit_media or edit_text with InlineKeyboardMarkup."""
-    if not cb.message or not isinstance(cb.message, Message):
-        await cb.answer()
-        return
+def reply(status: int, **body):
+    return JSONResponse(body, status_code=status, headers={"Cache-Control": "no-store"})
 
-    kb = build_inline_keyboard(view.get("reply_markup", {}))
-    text = str(view.get("text", ""))
-    mode = view.get("mode", "edit_text")
-    photo_url = view.get("photo_url")
 
+@app.get("/healthz")
+async def health():
     try:
-        if mode == "edit_media" and photo_url:
-            media = InputMediaPhoto(media=photo_url, caption=text, parse_mode=ParseMode.HTML)
-            await cb.message.edit_media(media=media, reply_markup=kb)
-        elif cb.message.photo:
-            # Transitioning from a media preview card back to a text menu cleanly
-            await cb.message.delete()
-            sent = await cb.message.answer(text=text, reply_markup=kb, parse_mode=ParseMode.HTML)
-            _active_panel_message[cb.message.chat.id] = sent.message_id
-        else:
-            await cb.message.edit_text(
-                text=text,
-                reply_markup=kb,
-                parse_mode=ParseMode.HTML,
-                disable_web_page_preview=True,
-            )
-            _active_panel_message[cb.message.chat.id] = cb.message.message_id
-    except TelegramBadRequest as exc:
-        if "message is not modified" not in str(exc).lower():
-            sent = await cb.message.answer(
-                text=text,
-                reply_markup=kb,
-                parse_mode=ParseMode.HTML,
-                disable_web_page_preview=True,
-            )
-            _active_panel_message[cb.message.chat.id] = sent.message_id
-
-    toast = view.get("callback_toast")
-    await cb.answer(text=toast if toast else None)
+        load_config()
+    except ConfigurationError:
+        return reply(503, ok=False, service="lovecraft-telegram", configured=False)
+    return reply(200, ok=True, service="lovecraft-telegram", configured=True)
 
 
-async def render_response_on_message(bot: Bot, msg: Message, view: Dict[str, Any]) -> None:
-    """Edits the existing active panel message when possible instead of spamming new messages."""
-    kb = build_inline_keyboard(view.get("reply_markup", {}))
-    text = str(view.get("text", ""))
-    chat_id = msg.chat.id
-    prev_id: Optional[int] = _active_panel_message.get(chat_id)
+class PhotoTooLarge(Exception):
+    pass
 
-    # Gently remove user's wizard input message when allowed to keep single-panel UX clean
-    if msg.text and not msg.text.startswith("/start"):
+
+class LimitedPhoto(io.BytesIO):
+    def write(self, data):
+        if self.tell() + len(data) > MAX_PHOTO_BYTES:
+            raise PhotoTooLarge
+        return super().write(data)
+
+
+async def dismiss_old_panel(bot: Bot, chat_id: int, old: int | None, new: int):
+    if old and old != new:
         try:
-            await msg.delete()
-        except TelegramBadRequest:
+            await bot.delete_message(chat_id=chat_id, message_id=old, request_timeout=4)
+        except TelegramAPIError:
             pass
 
-    if prev_id:
+
+async def show_view(bot: Bot, backend, chat_id: int, message_id: int | None, view: dict) -> int:
+    keyboard = build_inline_keyboard(view.get("reply_markup", {}))
+    text = str(view.get("text", ""))
+    photo_url = view.get("photo_url") if view.get("mode") == "edit_media" else None
+    if isinstance(photo_url, str) and photo_url:
+        photo: str | BufferedInputFile | None = photo_url
         try:
-            await bot.edit_message_text(
-                chat_id=chat_id,
-                message_id=prev_id,
-                text=text,
-                reply_markup=kb,
-                parse_mode=ParseMode.HTML,
-                disable_web_page_preview=True,
-            )
+            image_path = urlsplit(photo_url).path
+            if image_path.startswith("/api/qr/image/"):
+                photo = BufferedInputFile(await backend.qr_png(image_path), filename="lovecraft-qr.png")
+        except (BackendError, ClientError, TimeoutError, ValueError):
+            photo = None
+        if photo is not None:
+            try:
+                if message_id:
+                    await bot.edit_message_media(
+                        chat_id=chat_id, message_id=message_id, reply_markup=keyboard,
+                        media=InputMediaPhoto(media=photo, caption=text, parse_mode=ParseMode.HTML),
+                    )
+                    return message_id
+            except TelegramBadRequest as error:
+                if "message is not modified" in str(error).lower():
+                    return message_id  # type: ignore[return-value]
+            try:
+                sent = await bot.send_photo(chat_id=chat_id, photo=photo, caption=text, parse_mode=ParseMode.HTML, reply_markup=keyboard)
+                await dismiss_old_panel(bot, chat_id, message_id, sent.message_id)
+                return sent.message_id
+            except TelegramBadRequest:
+                # Always deliver the link and buttons even if Telegram rejects media.
+                pass
+        if image_path_available(photo_url):
+            text += f'\n\n<a href="{escape(photo_url, quote=True)}">فتح صورة بطاقة QR</a>'
+
+    if message_id:
+        try:
+            await bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=text,
+                                        reply_markup=keyboard, parse_mode=ParseMode.HTML, link_preview_options=NO_PREVIEW)
+            return message_id
+        except TelegramBadRequest as error:
+            if "message is not modified" in str(error).lower():
+                return message_id
+    sent = await bot.send_message(chat_id=chat_id, text=text, reply_markup=keyboard, parse_mode=ParseMode.HTML, link_preview_options=NO_PREVIEW)
+    await dismiss_old_panel(bot, chat_id, message_id, sent.message_id)
+    return sent.message_id
+
+
+def image_path_available(url: str) -> bool:
+    try:
+        parsed = urlsplit(url)
+        return parsed.scheme == "https" and bool(parsed.hostname) and parsed.path.startswith("/api/qr/image/")
+    except ValueError:
+        return False
+
+
+async def process_update(message: Message | CallbackQuery, bot: Bot, backend, update_id: int):
+    callback = message if isinstance(message, CallbackQuery) else None
+    telegram_message = callback.message if callback else message
+    if not isinstance(telegram_message, Message) or telegram_message.chat.type != "private":
+        if callback:
+            try:
+                await bot.answer_callback_query(callback.id, request_timeout=4)
+            except TelegramAPIError:
+                pass
+        return
+    user = message.from_user
+    if user is None or user.is_bot or user.id != telegram_message.chat.id:
+        return
+    chat_id = user.id
+    claimed = await backend.delivery("claim", update_id, chat_id)
+    status = claimed.get("status")
+    if status == "busy":
+        raise BackendError(409)
+    if status not in {"claimed", "delivered"}:
+        raise BackendError(502)
+
+    async def acknowledge(note: str | None = None):
+        if callback:
+            try:
+                await bot.answer_callback_query(callback.id, text=note, show_alert=bool(note), request_timeout=4)
+            except TelegramAPIError:
+                pass
+
+    if status == "delivered":
+        await acknowledge()
+        return
+    lease = claimed["lease"]
+    panel = claimed.get("lastMessageId")
+    finished = False
+    try:
+        if callback and panel and telegram_message.message_id != panel and not claimed.get("view"):
+            await acknowledge("القائمة دي قديمة. استخدم آخر رسالة من البوت.")
+            await backend.delivery("finish", update_id, chat_id, lease=lease, messageId=panel)
+            finished = True
             return
-        except TelegramBadRequest:
-            pass
+        await acknowledge()
+        view = claimed.get("view")
+        if not view:
+            fields = {"chat_id": chat_id, "first_name": user.first_name, "username": user.username, "last_name": user.last_name,
+                      "update_id": update_id, "lease": lease}
+            if callback:
+                view = await backend.interact(**fields, action="callback", callbackData=(callback.data or "nav:main")[:120])
+            elif telegram_message.photo or telegram_message.document:
+                photo = telegram_message.photo[-1] if telegram_message.photo else telegram_message.document
+                error_code = None
+                upload = None
+                try:
+                    if photo.file_size and photo.file_size > MAX_PHOTO_BYTES:
+                        raise PhotoTooLarge
+                    if not telegram_message.photo and photo.mime_type not in ALLOWED_MIME:
+                        raise ValueError
+                    file = await bot.get_file(photo.file_id)
+                    if not file.file_path:
+                        raise ValueError
+                    with LimitedPhoto() as buf:
+                        await bot.download_file(file.file_path, destination=buf, timeout=10)
+                        upload = await backend.upload_photo(chat_id, update_id, lease, buf.getvalue())
+                except PhotoTooLarge:
+                    error_code = "size"
+                except BackendError as error:
+                    if error.status == 401:
+                        raise
+                    error_code = "size" if error.status == 413 else "file" if error.status in (400, 415) else "storage"
+                except (TelegramAPIError, ClientError, TimeoutError, ValueError):
+                    error_code = "file"
+                if error_code or not upload or not upload.get("ok"):
+                    view = await backend.interact(**fields, action="photo_error", photoError=error_code or "storage")
+                else:
+                    view = await backend.interact(**fields, action="photo_uploaded", uploadedAsset={"assetId": upload["assetId"], "url": upload["url"]})
+            else:
+                text = (telegram_message.text or "").strip()
+                parts = text.split(maxsplit=1)
+                if parts and parts[0].split("@", 1)[0].lower() == "/start":
+                    view = await backend.interact(**fields, action="start", startPayload=parts[1][:120] if len(parts) > 1 else None)
+                else:
+                    view = await backend.interact(**fields, action="text", textInput=text[:2200])
+        active_panel = panel or (telegram_message.message_id if callback else None)
+        sent = await show_view(bot, backend, chat_id, active_panel, view)
+        await backend.delivery("finish", update_id, chat_id, lease=lease, messageId=sent)
+        finished = True
+    finally:
+        if not finished:
+            # Fast failures can retry immediately; a killed function is recovered by lease expiry.
+            try:
+                await asyncio.wait_for(backend.delivery("release", update_id, chat_id, lease=lease), timeout=3)
+            except (BackendError, ClientError, TimeoutError):
+                pass
 
-    sent = await msg.answer(
-        text=text,
-        reply_markup=kb,
-        parse_mode=ParseMode.HTML,
-        disable_web_page_preview=True,
-    )
-    _active_panel_message[chat_id] = sent.message_id
+
+@dispatcher.callback_query(F.message)
+async def handle_callback(callback: CallbackQuery, bot: Bot, backend, telegram_update_id: int):
+    await process_update(callback, bot, backend, telegram_update_id)
 
 
-@router.message(CommandStart())
-async def handle_start(
-    message: Message, command: CommandObject, backend: LovecraftBackendClient, bot: Bot
-) -> None:
-    if not message.from_user:
-        return
-    view = await backend.interact(
-        telegram_user_id=message.from_user.id,
-        telegram_chat_id=message.chat.id,
-        first_name=message.from_user.first_name or "مستخدم",
-        last_name=message.from_user.last_name,
-        username=message.from_user.username,
-        action_type="start",
-        start_payload=command.args,
-    )
-    sent = await message.answer(
-        text=view["text"],
-        reply_markup=build_inline_keyboard(view.get("reply_markup", {})),
-        parse_mode=ParseMode.HTML,
-        disable_web_page_preview=True,
-    )
-    _active_panel_message[message.chat.id] = sent.message_id
+@dispatcher.message(F.text | F.photo | F.document)
+async def handle_message(message: Message, bot: Bot, backend, telegram_update_id: int):
+    await process_update(message, bot, backend, telegram_update_id)
 
 
-@router.callback_query()
-async def handle_callback(callback: CallbackQuery, backend: LovecraftBackendClient) -> None:
-    if not callback.from_user or not callback.message:
-        await callback.answer()
-        return
+@app.post("/webhook")
+async def webhook(request: Request):
     try:
-        view = await backend.interact(
-            telegram_user_id=callback.from_user.id,
-            telegram_chat_id=callback.message.chat.id,
-            first_name=callback.from_user.first_name or "مستخدم",
-            last_name=callback.from_user.last_name,
-            username=callback.from_user.username,
-            action_type="callback",
-            callback_data=callback.data or "nav:main",
-        )
-        await render_response_on_callback(callback, view)
-    except Exception as exc:
-        logger.exception("Callback processing failed: %s", exc)
-        await callback.answer("حدث خطأ مؤقت، يرجى المحاولة مرة أخرى.", show_alert=True)
-
-
-@router.message(F.photo)
-async def handle_photo_upload(
-    message: Message, backend: LovecraftBackendClient, bot: Bot
-) -> None:
-    if not message.from_user or not message.photo:
-        return
-
-    largest = message.photo[-1]
-    if largest.file_size and largest.file_size > MAX_PHOTO_BYTES:
-        await render_response_on_message(
-            bot,
-            message,
-            {
-                "text": "⚠️ <b>حجم الصورة كبير جداً</b>\nالحد الأقصى المسموح هو 8 ميجابايت.",
-                "reply_markup": {
-                    "inline_keyboard": [[{"text": "⏭️ متابعة بدون الصورة", "callback_data": "wiz:colors"}]]
-                },
-            },
-        )
-        return
-
-    buf = io.BytesIO()
-    await bot.download(largest, destination=buf)
-    image_bytes = buf.getvalue()
-
-    upload_res = await backend.upload_photo_catbox(
-        telegram_user_id=message.from_user.id,
-        telegram_chat_id=message.chat.id,
-        first_name=message.from_user.first_name or "مستخدم",
-        image_bytes=image_bytes,
-    )
-
-    if not upload_res.get("ok"):
-        err_msg = upload_res.get("error", "تعذر رفع الصورة إلى Catbox حالياً.")
-        await render_response_on_message(
-            bot,
-            message,
-            {
-                "text": f"⚠️ <b>فشل رفع الصورة</b>\n\n{err_msg}",
-                "reply_markup": {
-                    "inline_keyboard": [
-                        [{"text": "⏭️ المتابعة إلى الألوان ▶️", "callback_data": "wiz:colors"}],
-                        [{"text": "🏠 الرئيسية", "callback_data": "nav:main"}],
-                    ]
-                },
-            },
-        )
-        return
-
-    view = await backend.interact(
-        telegram_user_id=message.from_user.id,
-        telegram_chat_id=message.chat.id,
-        first_name=message.from_user.first_name or "مستخدم",
-        last_name=message.from_user.last_name,
-        username=message.from_user.username,
-        action_type="photo_uploaded",
-        uploaded_asset={"assetId": upload_res["assetId"], "url": upload_res["url"]},
-    )
-    await render_response_on_message(bot, message, view)
-
-
-@router.message(F.text)
-async def handle_text_input(
-    message: Message, backend: LovecraftBackendClient, bot: Bot
-) -> None:
-    if not message.from_user or not message.text:
-        return
-    view = await backend.interact(
-        telegram_user_id=message.from_user.id,
-        telegram_chat_id=message.chat.id,
-        first_name=message.from_user.first_name or "مستخدم",
-        last_name=message.from_user.last_name,
-        username=message.from_user.username,
-        action_type="text",
-        text_input=message.text,
-    )
-    await render_response_on_message(bot, message, view)
-
-
-async def main() -> None:
-    cfg = load_config()
-    backend = LovecraftBackendClient(cfg.backend_api_url, cfg.bot_api_secret)
-    await backend.start()
-
-    bot = Bot(
-        token=cfg.telegram_bot_token,
-        default=DefaultBotProperties(parse_mode=ParseMode.HTML),
-    )
-    dp = Dispatcher()
-    dp["backend"] = backend
-    dp.include_router(router)
-
-    if cfg.run_mode == "webhook" and cfg.webhook_base_url:
-        webhook_url = f"{cfg.webhook_base_url}{cfg.webhook_path}"
-        await bot.set_webhook(
-            url=webhook_url,
-            secret_token=cfg.webhook_secret or None,
-            drop_pending_updates=True,
-        )
-        app = web.Application()
-        handler = SimpleRequestHandler(
-            dispatcher=dp,
-            bot=bot,
-            secret_token=cfg.webhook_secret or None,
-        )
-        handler.register(app, path=cfg.webhook_path)
-        setup_application(app, dp, bot=bot)
-        runner = web.AppRunner(app)
-        await runner.setup()
-        site = web.TCPSite(runner, host=cfg.webhook_host, port=cfg.webhook_port)
-        logger.info("LOVECRAFT BOT running in WEBHOOK mode at %s", webhook_url)
-        await site.start()
-        try:
-            await asyncio.Event().wait()
-        finally:
-            await backend.close()
-            await bot.session.close()
-    else:
-        await bot.delete_webhook(drop_pending_updates=True)
-        logger.info("LOVECRAFT BOT running in POLLING mode")
-        try:
-            await dp.start_polling(bot)
-        finally:
-            await backend.close()
-            await bot.session.close()
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
+        config = load_config()
+    except ConfigurationError:
+        return reply(503, ok=False)
+    incoming = request.headers.get("x-telegram-bot-api-secret-token", "")
+    if len(incoming) > 256 or not hmac.compare_digest(incoming.encode(), config.webhook_secret.encode()):
+        return reply(403, ok=False)
+    if request.headers.get("content-type", "").partition(";")[0].strip().lower() != "application/json":
+        return reply(415, ok=False)
+    body = bytearray()
+    async for chunk in request.stream():
+        body.extend(chunk)
+        if len(body) > 96 * 1024:
+            return reply(413, ok=False)
+    try:
+        parsed = json.loads(body)
+        update_id = parsed.get("update_id") if isinstance(parsed, dict) else None
+        if type(update_id) is not int or not 0 < update_id <= 9_999_999_999_999:
+            return reply(400, ok=False)
+        bot = Bot(config.telegram_bot_token, session=AiohttpSession(timeout=12))
+        async with bot.context(), LovecraftBackendClient(config.backend_api_url, config.bot_api_secret) as backend:
+            async with asyncio.timeout(50):
+                update = Update.model_validate(parsed, context={"bot": bot})
+                await dispatcher.feed_update(bot, update, backend=backend, telegram_update_id=update_id)
+    except (ValueError, ValidationError):
+        return reply(400, ok=False)
+    except (BackendError, TelegramAPIError, ClientError, TimeoutError) as error:
+        # Telegram and aiohttp exceptions may contain token-bearing URLs; log only the class.
+        log.warning("Webhook delivery deferred (%s)", type(error).__name__)
+        return reply(503, ok=False)
+    except Exception as error:
+        log.error("Webhook delivery failed (%s)", type(error).__name__)
+        return reply(500, ok=False)
+    return reply(200, ok=True)

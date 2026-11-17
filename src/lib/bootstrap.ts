@@ -8,6 +8,7 @@ import {
   templates,
   templateVersions,
   platformState,
+  inDatabaseTransaction,
 } from "@/db";
 import { COMPONENT_LIBRARY } from "./components-catalog";
 import {
@@ -22,12 +23,29 @@ let bootstrapPromise: Promise<void> | null = null;
 
 export async function ensurePlatformSeeded(): Promise<void> {
   if (!bootstrapPromise) {
-    bootstrapPromise = runSeed().catch((err) => {
+    bootstrapPromise = seedOnce().catch((err) => {
       bootstrapPromise = null;
       throw err;
     });
   }
   return bootstrapPromise;
+}
+
+const SEED_REVISION = "vercel-1";
+
+async function seedOnce(): Promise<void> {
+  const isReady = async () => {
+    const [row] = await db.select({ value: platformState.value }).from(platformState).where(eq(platformState.key, "deployment_seed_revision")).limit(1);
+    return row?.value === SEED_REVISION;
+  };
+  if (await isReady()) return;
+  await inDatabaseTransaction(async (tx) => {
+    await tx.execute(sql`select pg_advisory_xact_lock(hashtextextended('lovecraft:catalog-bootstrap', 0))`);
+    if (await isReady()) return;
+    await runSeed();
+    await tx.insert(platformState).values({ key: "deployment_seed_revision", value: SEED_REVISION })
+      .onConflictDoUpdate({ target: platformState.key, set: { value: SEED_REVISION, updatedAt: new Date() } });
+  });
 }
 
 async function runSeed(): Promise<void> {
@@ -82,8 +100,7 @@ async function runSeed(): Promise<void> {
       githubBranch: process.env.GITHUB_TEMPLATES_BRANCH || "main",
       githubSyncEnabled: true,
       lastGithubSyncAt: null,
-      catboxEndpoint: "https://catbox.moe/user/api.php",
-      maxUploadMb: 8,
+      maxUploadMb: 4,
       allowedImageMimes: ["image/jpeg", "image/png", "image/webp", "image/gif"],
       apiRateLimitPerMin: 60,
       loginMaxAttempts: 5,

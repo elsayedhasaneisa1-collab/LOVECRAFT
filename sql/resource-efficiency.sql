@@ -8,6 +8,7 @@ ALTER TABLE IF EXISTS public.credit_transactions SET (autovacuum_vacuum_scale_fa
 ALTER TABLE IF EXISTS public.security_events SET (autovacuum_vacuum_scale_factor = 0.1, autovacuum_analyze_scale_factor = 0.1);
 ALTER TABLE IF EXISTS public.site_events SET (autovacuum_vacuum_scale_factor = 0.1, autovacuum_analyze_scale_factor = 0.1);
 ALTER TABLE IF EXISTS public.user_sessions SET (autovacuum_vacuum_scale_factor = 0.1, autovacuum_analyze_scale_factor = 0.1);
+ALTER TABLE IF EXISTS public.telegram_deliveries SET (autovacuum_vacuum_scale_factor = 0.1, autovacuum_analyze_scale_factor = 0.1);
 ALTER TABLE IF EXISTS public.admin_sessions SET (autovacuum_vacuum_scale_factor = 0.1, autovacuum_analyze_scale_factor = 0.1);
 ALTER TABLE IF EXISTS public.site_analytics_daily SET (autovacuum_vacuum_scale_factor = 0.05, autovacuum_analyze_scale_factor = 0.05);
 

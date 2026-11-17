@@ -6,9 +6,9 @@ PostgreSQL instance.
 
 ## Connection management
 
-- The pool size is environment-driven (`DATABASE_POOL_MAX`, default 20, allowed 2–60) instead of
-  a fixed value, so serverless deployments can run many small containers without exhausting the
-  database connection limit.
+- The pool size is environment-driven (`DATABASE_POOL_MAX`, default 2 per Vercel instance
+  or 20 locally). Supabase's transaction pooler is recommended for the website. The Python
+  webhook has no database connections of its own.
 - `DATABASE_IDLE_TIMEOUT_MS` and `DATABASE_CONNECTION_TIMEOUT_MS` release idle connections and
   fail fast instead of letting requests queue.
 - Every session carries server-side guards: `statement_timeout`, `idle_in_transaction_session_timeout`

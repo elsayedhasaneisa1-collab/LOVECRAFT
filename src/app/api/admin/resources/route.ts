@@ -27,6 +27,7 @@ export async function GET(req: NextRequest) {
     "referral_rewards",
     "credit_transactions",
     "user_sessions",
+    "telegram_deliveries",
     "admin_sessions",
     "security_events",
     "templates",

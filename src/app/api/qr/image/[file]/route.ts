@@ -1,32 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "node:fs/promises";
-import path from "node:path";
-import { qrCacheDir } from "@/lib/qr-studio";
+import { readQrCard } from "@/lib/qr-card-url";
+import { renderQrPng, themeForCategory } from "@/lib/qr-studio";
+import { checkRateLimit, getClientIp } from "@/lib/security";
 
-export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
-const SAFE_NAME = /^qr-[a-z]+-[a-f0-9]{16}\.png$/;
-
-/**
- * Serves a generated QR card from the cache directory.
- * The file name is validated strictly, so the route can never read outside the cache.
- */
-export async function GET(_req: NextRequest, { params }: { params: Promise<{ file: string }> }) {
-  const { file } = await params;
-  if (!SAFE_NAME.test(file)) {
-    return NextResponse.json({ error: "اسم الملف غير صالح." }, { status: 400 });
+export async function GET(req: NextRequest, { params }: { params: Promise<{ file: string }> }) {
+  const card = readQrCard((await params).file);
+  if (!card) return new NextResponse(null, { status: 404, headers: { "Cache-Control": "no-store" } });
+  if (!checkRateLimit(`qr-image:${getClientIp(req)}`, 45, 60_000).allowed) {
+    return new NextResponse(null, { status: 429, headers: { "Cache-Control": "no-store", "Retry-After": "60" } });
   }
-
-  const target = path.join(qrCacheDir(), file);
-  try {
-    const buffer = await fs.readFile(target);
-    return new NextResponse(new Uint8Array(buffer), {
-      headers: {
-        "Content-Type": "image/png",
-        "Cache-Control": "public, max-age=31536000, immutable",
-      },
-    });
-  } catch {
-    return NextResponse.json({ error: "البطاقة غير موجودة." }, { status: 404 });
-  }
+  const png = await renderQrPng({ url: card.url, theme: themeForCategory(card.theme), title: "Your Moments. Your Website.", handle: card.handle });
+  return new NextResponse(new Uint8Array(png), {
+    headers: {
+      "Content-Type": "image/png", "X-Content-Type-Options": "nosniff",
+      "Cache-Control": "public, max-age=86400", "Vercel-CDN-Cache-Control": "public, s-maxage=604800",
+    },
+  });
 }

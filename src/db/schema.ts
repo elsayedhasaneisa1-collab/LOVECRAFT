@@ -59,6 +59,24 @@ export const userSessions = pgTable(
   ]
 );
 
+// Telegram serverless delivery checkpoints. Only the pending response is kept; it is erased after delivery.
+export const telegramDeliveries = pgTable(
+  "telegram_deliveries",
+  {
+    updateId: bigint("update_id", { mode: "number" }).primaryKey(),
+    chatId: bigint("chat_id", { mode: "number" }).notNull(),
+    lease: text("lease").notNull(),
+    leaseUntil: timestamp("lease_until", { withTimezone: true }).notNull(),
+    pendingView: jsonb("pending_view").$type<Record<string, unknown>>(),
+    deliveredAt: timestamp("delivered_at", { withTimezone: true }),
+    touchedAt: timestamp("touched_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [
+    index("idx_telegram_pending_chat").on(t.chatId, t.leaseUntil).where(sql`${t.deliveredAt} IS NULL`),
+    index("idx_telegram_delivery_retention").on(t.touchedAt),
+  ]
+);
+
 // 3. ADMIN USERS (Website-only owners/admins — NO default credentials)
 export const adminUsers = pgTable(
   "admin_users",

@@ -22,6 +22,7 @@ async function decode(buffer: Buffer): Promise<string | null> {
   return result?.data ?? null;
 }
 
+let testIdentity: number | undefined;
 async function main() {
   const anonymous = await fetch(`${BASE}/api/bot/engine`, {
     method: 'POST',
@@ -43,6 +44,7 @@ async function main() {
   assert.equal(sessionRes.status, 200);
   const cookie = (sessionRes.headers.get('set-cookie') || '').split(';')[0]!;
   const profile = (await sessionRes.json()) as { telegramUserId: number; firstName: string };
+  testIdentity = profile.telegramUserId;
   assert(profile.telegramUserId < 0, 'A studio session must not impersonate a Telegram account');
 
   const call = async (payload: Record<string, unknown>) => {
@@ -150,6 +152,6 @@ main()
     process.exitCode = 1;
   })
   .finally(async () => {
-    await db.delete(users).where(and(eq(users.telegramUserId, 990000777), lt(users.telegramUserId, 0)));
+    if (testIdentity !== undefined) await db.delete(users).where(and(eq(users.telegramUserId, testIdentity), lt(users.telegramUserId, 0)));
     await pool.end();
   });

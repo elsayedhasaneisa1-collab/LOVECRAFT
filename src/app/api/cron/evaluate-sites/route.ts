@@ -3,6 +3,8 @@ import { evaluateAllSitesValidity } from "@/lib/site-engine";
 import { getAdminSession } from "@/lib/admin-auth";
 import { constantTimeCompare, getClientIp, logAdminAudit, logSecurityEvent } from "@/lib/security";
 
+export const maxDuration = 60;
+
 async function handleEvaluate(req: NextRequest) {
   const ip = getClientIp(req);
   const authHeader = req.headers.get("authorization") || "";

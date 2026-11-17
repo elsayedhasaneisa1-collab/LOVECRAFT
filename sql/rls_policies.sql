@@ -12,7 +12,8 @@ BEGIN
     'sites', 'site_data', 'site_assets', 'site_expirations', 'site_referral_requirements',
     'referrals', 'referral_rewards', 'user_credits', 'credit_transactions',
     'site_events', 'visits', 'bot_settings',
-    'admin_users', 'admin_sessions', 'admin_audit_logs', 'security_events', 'system_settings'
+    'admin_users', 'admin_sessions', 'admin_audit_logs', 'security_events', 'system_settings',
+    'platform_state', 'visit_marks', 'site_analytics_daily', 'system_metrics_hourly', 'telegram_deliveries'
   ]
   LOOP
     EXECUTE format('ALTER TABLE IF EXISTS public.%I ENABLE ROW LEVEL SECURITY;', tbl);

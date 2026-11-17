@@ -5,9 +5,10 @@ const contentSecurityPolicy = [
   process.env.NODE_ENV === "production" ? "script-src 'self' 'unsafe-inline'" : "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' data: https://fonts.gstatic.com",
-  "img-src 'self' data: blob: https://files.catbox.moe https://catbox.moe",
-  "media-src 'self' data: blob: https://files.catbox.moe",
-  "connect-src 'self' https://catbox.moe https://files.catbox.moe",
+  // Catbox remains read-only for images attached before the move to Vercel Blob.
+  "img-src 'self' data: blob: https://*.public.blob.vercel-storage.com https://files.catbox.moe https://catbox.moe",
+  "media-src 'self' data: blob: https://*.public.blob.vercel-storage.com https://files.catbox.moe",
+  "connect-src 'self'",
   "frame-ancestors 'self'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -16,8 +17,12 @@ const contentSecurityPolicy = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  outputFileTracingIncludes: {
+    "/api/qr/image/**": ["./assets/watermark.png", "./watermark.png"],
+  },
   images: {
     remotePatterns: [
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com", pathname: "/site-media/**" },
       {
         protocol: "https",
         hostname: "files.catbox.moe",

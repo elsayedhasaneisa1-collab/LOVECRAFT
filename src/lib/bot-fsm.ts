@@ -1,4 +1,4 @@
-import { and, count, desc, eq, ne } from "drizzle-orm";
+import { and, count, desc, eq, gt, ne } from "drizzle-orm";
 import {
   db,
   users,
@@ -31,7 +31,9 @@ import {
   generateSecureToken,
   sanitizePlainText,
 } from "./security";
-import { buildReferralQr, buildSiteQr, getBotHandle } from "./qr-service";
+import { buildReferralQr, buildSiteQr } from "./qr-service";
+import { attachablePhoto } from "./site-media";
+import { MAX_DRAFT_PHOTOS } from "./upload-limits";
 import type { TemplateFieldSchema } from "./templates-catalog";
 
 export interface InlineButton {
@@ -63,7 +65,6 @@ interface WizardDraft {
   stepIndex?: number;
   fields?: Record<string, string>;
   assetIds?: number[];
-  photoUrls?: string[];
   paletteId?: string;
   heroVariant?: string;
   backgroundVariant?: string;
@@ -98,8 +99,8 @@ async function getOrCreateUserSession(userId: number) {
   const [existing] = await db
     .select()
     .from(userSessions)
-    .where(eq(userSessions.userId, userId))
-    .limit(1);
+    .where(and(eq(userSessions.userId, userId), gt(userSessions.expiresAt, new Date())))
+    .orderBy(desc(userSessions.updatedAt), desc(userSessions.id)).limit(1);
 
   const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   if (existing) return existing;
@@ -146,7 +147,8 @@ export async function processBotInteraction(params: {
   username?: string | null;
   firstName: string;
   lastName?: string | null;
-  actionType: "start" | "callback" | "text" | "photo_uploaded";
+  actionType: "start" | "callback" | "text" | "photo_uploaded" | "photo_error";
+  photoError?: "size" | "storage" | "file";
   startPayload?: string | null;
   callbackData?: string | null;
   textInput?: string | null;
@@ -155,7 +157,7 @@ export async function processBotInteraction(params: {
   ipAddress?: string;
 }): Promise<BotRenderResponse> {
   const [botCfg] = await db.select().from(botSettings).limit(1);
-  const [sysCfg] = await db.select().from(systemSettings).limit(1);
+  const [sysCfg] = params.baseUrl ? [] : await db.select({primaryDomain: systemSettings.primaryDomain}).from(systemSettings).limit(1);
   const domain = resolveBaseDomain(params.baseUrl, sysCfg?.primaryDomain);
   const botUsername = botCfg?.botUsername || "LoveCraftMakerBot";
 
@@ -227,15 +229,23 @@ export async function processBotInteraction(params: {
     };
   }
 
-  // Handle photo upload in wizard
-  if (params.actionType === "photo_uploaded" && params.uploadedAsset) {
-    if (session.wizardStep === "photos" && draft.templateSlug) {
-      const nextIds = [...(draft.assetIds || []), params.uploadedAsset.assetId].slice(0, 8);
-      const nextUrls = [...(draft.photoUrls || []), params.uploadedAsset.url].slice(0, 8);
-      const nextDraft: WizardDraft = { ...draft, assetIds: nextIds, photoUrls: nextUrls };
-      await saveSessionState(session.id, "wizard", "photos", nextDraft);
-      return renderPhotosStep(nextDraft, "✅ تم رفع الصورة عبر Catbox وحفظ رابطها بنجاح!");
+  if (params.actionType === "photo_uploaded" || params.actionType === "photo_error") {
+    if (session.wizardStep !== "photos" || !draft.templateSlug) {
+      return { mode: "edit_text", parse_mode: "HTML", text: "ابدأ إعداد موقعك ثم أرسل الصورة في خطوة إضافة الصور.",
+        reply_markup: { inline_keyboard: mainMenuKeyboard() }, awaiting_input: "none" };
     }
+    if (params.actionType === "photo_error") {
+      const errors = { size: "الحد الأقصى للصورة 4 ميجابايت.", file: "تعذر قراءة الصورة. أرسل JPG أو PNG أو WebP أو GIF سليمة.", storage: "تعذر رفع الصورة الآن. يمكنك المحاولة مرة أخرى أو المتابعة بدونها." };
+      return renderPhotosStep(draft, errors[params.photoError ?? "storage"]);
+    }
+    const assetId = params.uploadedAsset?.assetId;
+    if (!assetId || !await attachablePhoto(reg.user.id, assetId)) return renderPhotosStep(draft, "الصورة غير متاحة لهذه الجلسة.");
+    const ids = draft.assetIds ?? [];
+    if (ids.includes(assetId)) return renderPhotosStep(draft, "الصورة مضافة بالفعل.");
+    if (ids.length >= MAX_DRAFT_PHOTOS) return renderPhotosStep(draft, "وصلت للحد الأقصى للصور.");
+    const nextDraft: WizardDraft = { ...draft, assetIds: [...ids, assetId] };
+    await saveSessionState(session.id, "wizard", "photos", nextDraft);
+    return renderPhotosStep(nextDraft, "✅ تم حفظ رابط الصورة على Vercel Blob.");
   }
 
   // Handle text input during wizard or site edit
@@ -569,7 +579,6 @@ export async function processBotInteraction(params: {
       stepIndex: 0,
       fields: {},
       assetIds: [],
-      photoUrls: [],
       paletteId: defCfg.paletteId || "crimson-velvet",
       heroVariant: defCfg.componentsConfig?.hero || "cinematic",
       backgroundVariant: defCfg.componentsConfig?.background || "stars",
@@ -847,7 +856,7 @@ export async function processBotInteraction(params: {
           (f.mainMessage || "").length > 140 ? "..." : ""
         }\n` +
         `• <b>التاريخ:</b> <code>${escapeTelegramHtml(f.eventDate || "غير محدد")}</code>\n` +
-        `• <b>الصور المرفوعة (Catbox):</b> ${(draft.assetIds || []).length} صورة\n` +
+        `• <b>الصور المرفوعة:</b> ${(draft.assetIds || []).length} صورة\n` +
         `• <b>الألوان:</b> ${pal.emoji} ${escapeTelegramHtml(pal.nameAr)}\n` +
         `• <b>التصميم:</b> Hero <code>${escapeTelegramHtml(
           draft.heroVariant || "cinematic"
@@ -963,7 +972,7 @@ export async function processBotInteraction(params: {
         `\nيمكنك الآن فتح الموقع أو تعديله أو مشاركته مع من تحب:`,
       reply_markup: {
         inline_keyboard: [
-          [{ text: "🌐 فتح الموقع الآن", url: siteUrl }],
+          [{ text: "🌐 فتح الموقع الآن", url: siteUrl }, { text: "🎟️ بطاقة QR", callback_data: `qr:site:${result.site.id}` }],
           [
             { text: "✏️ تعديل الموقع", callback_data: `sites:view:${result.site.id}` },
             { text: "📤 مشاركة الرابط", url: shareUrl },
@@ -1189,7 +1198,8 @@ export async function processBotInteraction(params: {
   }
 
   if (cb.startsWith("qr:site:")) {
-    const siteId = Number(cb.split(":")[2]);
+    const inputId = Number(cb.split(":")[2]);
+    const siteId = Number.isInteger(inputId) && inputId > 0 && inputId <= 2147483647 ? inputId : 0;
     const [site] = await db
       .select({
         id: sites.id,
@@ -1213,9 +1223,9 @@ export async function processBotInteraction(params: {
       };
     }
 
-    const handle = await getBotHandle();
+    const handle = botUsername.replace(/^@/, "");
     const siteUrl = `${domain}/s/${site.slug}`;
-    const qr = await buildSiteQr({ slug: site.slug, siteUrl, botHandle: `@${handle}`, origin: domain });
+    const qr = buildSiteQr({ siteUrl, botHandle: handle, origin: domain, categorySlug: site.categorySlug });
 
     if (!qr.ok || !qr.imageUrl) {
       return {
@@ -1256,9 +1266,9 @@ export async function processBotInteraction(params: {
   }
 
   if (cb === "qr:referral") {
-    const handle = await getBotHandle();
+    const handle = botUsername.replace(/^@/, "");
     const referralUrl = `https://t.me/${handle}?start=${reg.user.referralCode}`;
-    const qr = await buildReferralQr({
+    const qr = buildReferralQr({
       referralUrl,
       botHandle: `@${handle}`,
       origin: domain,
@@ -1461,11 +1471,11 @@ function renderPhotosStep(draft: WizardDraft, notice?: string): BotRenderRespons
     mode: "edit_text",
     parse_mode: "HTML",
     text:
-      `🖼️ <b>إضافة الصور (استضافة Catbox)</b>\n\n` +
+      `🖼️ <b>إضافة الصور</b>\n\n` +
       (notice ? `${escapeTelegramHtml(notice)}\n\n` : "") +
-      `الصور المرفوعة حالياً: <b>${countUploaded}</b> / 8\n` +
-      `أرسل صورة الآن (JPG / PNG / WebP / GIF) لرفعها تلقائياً إلى Catbox وربطها بموقعك، أو اضغط المتابعة لاستخدام التصميم الجاهز.\n\n` +
-      `<i>تنبيه: تُرفع الصور كروابط عبر Catbox ولا تضمن الخدمة الخارجية خصوصية كاملة أو بقاءً دائماً للملفات.</i>`,
+      `الصور المرفوعة حالياً: <b>${countUploaded}</b> / ${MAX_DRAFT_PHOTOS}\n` +
+      `أرسل صورة الآن (JPG / PNG / WebP / GIF) بحجم لا يتجاوز 4 ميجابايت لرفعها إلى Vercel Blob وربطها بموقعك، أو اضغط المتابعة لاستخدام التصميم الجاهز.\n\n` +
+      `<i>تنبيه: الصور المرفوعة قابلة للعرض لأي شخص لديه رابطها. لا ترفع صورة خاصة.</i>`,
     reply_markup: {
       inline_keyboard: [
         [

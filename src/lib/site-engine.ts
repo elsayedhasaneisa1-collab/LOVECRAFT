@@ -1060,7 +1060,8 @@ export async function createUserSite(input: CreateSiteInput): Promise<
             and(
               inArray(siteAssets.id, cleanIds),
               eq(siteAssets.userId, input.userId),
-              isNull(siteAssets.siteId)
+              isNull(siteAssets.siteId),
+              ne(siteAssets.provider, "vercel-blob-deleting")
             )
           );
       }

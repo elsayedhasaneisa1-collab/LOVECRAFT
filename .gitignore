@@ -22,8 +22,9 @@ next-env.d.ts
 .env.*
 !.env.example
 
-# Generated QR cards (produced on demand by the server)
+# Generated QR test cards and optional sandbox-only release downloads
 public/qr/
+public/release-downloads/
 
 # Logs & OS
 *.log
@@ -33,3 +34,7 @@ Thumbs.db
 # Local tooling
 .vscode/
 .idea/
+.vercel/
+.venv/
+.pytest_cache/
+.coverage

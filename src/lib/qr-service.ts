@@ -1,135 +1,38 @@
 import { and, eq, ne } from "drizzle-orm";
 import { db, sites, templateCategories, templates, botSettings } from "@/db";
-import { qrCacheDir, renderQrArtifact, themeForCategory, type QrShapeKey } from "./qr-studio";
-import { publishFileToGithub } from "./github-publish";
+import { qrThemes, signQrCard, type QrCardTheme } from "./qr-card-url";
 
-const OUTPUT_DIR = qrCacheDir();
+const labels: Record<QrCardTheme, string> = { love: "شكل قلب", events: "شكل هدية", friends: "شكل حلقتين", games: "شكل ذراع تحكم", portfolio: "شكل لوحة ألوان", messages: "شكل ظرف", bot: "شكل نجمة" };
 
-export interface QrResult {
-  ok: boolean;
-  imageUrl: string | null;
-  pageUrl: string;
-  shape: QrShapeKey;
-  shapeLabelAr: string;
-  siteTitle: string;
-  githubUrl: string | null;
-  cached: boolean;
-  message?: string;
-}
-
-/**
- * Builds the branded QR card for a published site.
- * The card is cached on disk, so repeated requests never re-encode or re-rasterise.
- */
-export async function buildSiteQr(params: {
-  slug: string;
-  siteUrl: string;
-  botHandle: string;
-  origin: string;
-}): Promise<QrResult> {
-  const rows = await db
-    .select({
-      siteId: sites.id,
-      title: sites.title,
-      slug: sites.slug,
-      categorySlug: templateCategories.slug,
-      templateName: templates.nameAr,
-    })
-    .from(sites)
-    .innerJoin(templates, eq(sites.templateId, templates.id))
-    .innerJoin(templateCategories, eq(templates.categoryId, templateCategories.id))
-    .where(and(eq(sites.slug, params.slug), ne(sites.status, "deleted")))
-    .limit(1);
-
-  const row = rows[0];
-  if (!row) {
-    return {
-      ok: false,
-      imageUrl: null,
-      pageUrl: params.siteUrl,
-      shape: "bot",
-      shapeLabelAr: "عام",
-      siteTitle: "",
-      githubUrl: null,
-      cached: false,
-      message: "الموقع غير موجود.",
-    };
-  }
-
-  const theme = themeForCategory(row.categorySlug);
-  const artifact = await renderQrArtifact({
-    url: params.siteUrl,
-    theme,
-    title: row.title || row.templateName,
-    handle: params.botHandle,
-    outputDir: OUTPUT_DIR,
-    publicPrefix: "/qr",
-  });
-
-  // The card is also archived in the repository root when a token is configured.
-  const published = await publishFileToGithub(
-    artifact.fileName,
-    artifact.buffer,
-    `feat(qr): branded card for ${row.slug} (${theme.key})`,
-  );
-
+function buildQr(url: string, origin: string, botHandle: string, shape: QrCardTheme) {
+  const file = signQrCard({ url, handle: botHandle.replace(/^@/, ""), theme: shape });
   return {
-    ok: true,
-    // On serverless hosts the writable cache is ephemeral. Prefer the durable
-    // public GitHub asset when publishing succeeded; fall back to the local cache.
-    imageUrl: published.ok && published.url
-      ? published.url
-      : `${params.origin}/api/qr/image/${artifact.fileName}`,
-    pageUrl: params.siteUrl,
-    shape: theme.key,
-    shapeLabelAr: theme.labelAr,
-    siteTitle: row.title,
-    githubUrl: published.url,
-    cached: artifact.reused,
-    message: published.ok
-      ? undefined
-      : `تم إنشاء البطاقة محليًا. ${published.reason ?? ""}`.trim(),
+    ok: Boolean(file),
+    imageUrl: file ? `${origin}/api/qr/image/${file}` : null,
+    pageUrl: url,
+    shape,
+    shapeLabelAr: labels[shape],
+    message: file ? undefined : "تعذر إنشاء رابط بطاقة QR. تأكد من إعداد نطاق الموقع ومفتاح توقيع البطاقات.",
   };
 }
 
-/**
- * Builds the QR card that carries the owner's personal referral link.
- */
-export async function buildReferralQr(params: {
-  referralUrl: string;
-  botHandle: string;
-  origin: string;
-}): Promise<QrResult> {
-  const theme = themeForCategory("bot");
-  const artifact = await renderQrArtifact({
-    url: params.referralUrl,
-    theme,
-    title: "LoveCraft",
-    handle: params.botHandle,
-    outputDir: OUTPUT_DIR,
-    publicPrefix: "/qr",
-  });
+export function buildSiteQr(params: { siteUrl: string; botHandle: string; origin: string; categorySlug: string }) {
+  const category = params.categorySlug as QrCardTheme;
+  return buildQr(params.siteUrl, params.origin, params.botHandle, qrThemes.includes(category) && category !== "bot" ? category : "portfolio");
+}
 
-  const published = await publishFileToGithub(
-    artifact.fileName,
-    artifact.buffer,
-    `feat(qr): referral card for ${params.botHandle}`,
-  );
+export function buildReferralQr(params: { referralUrl: string; botHandle: string; origin: string }) {
+  return buildQr(params.referralUrl, params.origin, params.botHandle, "bot");
+}
 
-  return {
-    ok: true,
-    imageUrl: `${params.origin}/api/qr/image/${artifact.fileName}`,
-    pageUrl: params.referralUrl,
-    shape: theme.key,
-    shapeLabelAr: theme.labelAr,
-    siteTitle: "رابط الإحالة",
-    githubUrl: published.url,
-    cached: artifact.reused,
-    message: published.ok ? undefined : `تم إنشاء البطاقة محليًا. ${published.reason ?? ""}`.trim(),
-  };
+export async function getSiteQrCategory(slug: string, ownerId: number) {
+  const [row] = await db.select({ categorySlug: templateCategories.slug }).from(sites)
+    .innerJoin(templates, eq(sites.templateId, templates.id)).innerJoin(templateCategories, eq(templates.categoryId, templateCategories.id))
+    .where(and(eq(sites.slug, slug), eq(sites.userId, ownerId), ne(sites.status, "deleted"))).limit(1);
+  return row?.categorySlug;
 }
 
 export async function getBotHandle(): Promise<string> {
-  const [cfg] = await db.select().from(botSettings).limit(1);
-  return cfg?.botUsername || process.env.TELEGRAM_BOT_USERNAME?.trim() || "LoveCraftMakerBot";
+  const [cfg] = await db.select({ name: botSettings.botUsername }).from(botSettings).limit(1);
+  return cfg?.name || process.env.TELEGRAM_BOT_USERNAME?.trim() || "LoveCraftMakerBot";
 }

@@ -95,7 +95,9 @@ export function sanitizeSafeImageUrl(input: unknown): string | null {
     const parsed = new URL(trimmed);
     if (
       parsed.protocol === "https:" &&
-      (parsed.hostname === "files.catbox.moe" || parsed.hostname === "catbox.moe")
+      !parsed.username && !parsed.password && !parsed.port &&
+      (parsed.hostname === "files.catbox.moe" || parsed.hostname === "catbox.moe" ||
+        /^[a-z0-9-]+\.public\.blob\.vercel-storage\.com$/i.test(parsed.hostname))
     ) {
       return parsed.toString();
     }

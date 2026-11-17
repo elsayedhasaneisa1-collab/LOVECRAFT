@@ -1,90 +1,81 @@
-"""
-LOVECRAFT BOT — Secured Async Backend Client
-Communicates with the LOVECRAFT Next.js Multi-Tenant Backend API.
-"""
-from typing import Any, Dict, Optional
-import uuid
+"""Requests to the Vercel-hosted Next.js backend; the bot does not connect to Postgres."""
+from typing import Any
+import re
+
 import aiohttp
 
 
+MAX_PHOTO_BYTES = 4 * 1024 * 1024
+MAX_QR_BYTES = 1024 * 1024
+
+
+class BackendError(Exception):
+    def __init__(self, status: int, code: str = ""):
+        super().__init__("Backend request failed")
+        self.status = status
+        self.code = code
+
+
 class LovecraftBackendClient:
-    def __init__(self, base_url: str, api_secret: str) -> None:
-        self._base_url = base_url.rstrip("/")
-        self._api_secret = api_secret
-        self._session: Optional[aiohttp.ClientSession] = None
+    def __init__(self, base_url: str, api_secret: str):
+        self._base_url = base_url
+        self._secret = api_secret
+        self._session: aiohttp.ClientSession | None = None
 
-    async def start(self) -> None:
-        timeout = aiohttp.ClientTimeout(total=25)
-        self._session = aiohttp.ClientSession(
-            timeout=timeout,
-            headers={
-                "X-Bot-Secret": self._api_secret,
-                "User-Agent": "LOVECRAFT-AIOGRAM-BOT/1.0",
-            },
-        )
+    async def __aenter__(self):
+        self._session = aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=16, connect=4))
+        return self
 
-    async def close(self) -> None:
-        if self._session and not self._session.closed:
+    async def __aexit__(self, *_):
+        if self._session:
             await self._session.close()
 
-    async def interact(
-        self,
-        *,
-        telegram_user_id: int,
-        telegram_chat_id: int,
-        first_name: str,
-        last_name: Optional[str],
-        username: Optional[str],
-        action_type: str,
-        start_payload: Optional[str] = None,
-        callback_data: Optional[str] = None,
-        text_input: Optional[str] = None,
-        uploaded_asset: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
-        assert self._session is not None, "Client session not initialized"
-        payload: Dict[str, Any] = {
-            "telegramUserId": telegram_user_id,
-            "telegramChatId": telegram_chat_id,
-            "firstName": first_name,
-            "lastName": last_name,
-            "username": username,
-            "actionType": action_type,
-            "startPayload": start_payload,
-            "callbackData": callback_data,
-            "textInput": text_input,
-            "uploadedAsset": uploaded_asset,
-        }
-        headers = {"Idempotency-Key": str(uuid.uuid4())}
+    async def _post(self, path: str, *, payload: dict | None = None, form: aiohttp.FormData | None = None) -> dict:
+        assert self._session is not None
         async with self._session.post(
-            f"{self._base_url}/api/bot/engine", json=payload, headers=headers
-        ) as resp:
-            data = await resp.json()
-            if resp.status >= 400:
-                raise RuntimeError(data.get("error", f"Backend error {resp.status}"))
+            self._base_url + path, headers={"X-Bot-Secret": self._secret}, json=payload, data=form,
+            allow_redirects=False,
+        ) as res:
+            try:
+                data = await res.json()
+            except (ValueError, aiohttp.ContentTypeError):
+                raise BackendError(res.status) from None
+            if res.status != 200 or not isinstance(data, dict):
+                raise BackendError(res.status, data.get("code", "") if isinstance(data, dict) else "")
             return data
 
-    async def upload_photo_catbox(
-        self,
-        *,
-        telegram_user_id: int,
-        telegram_chat_id: int,
-        first_name: str,
-        image_bytes: bytes,
-        filename: str = "telegram_photo.jpg",
-        mime_type: str = "image/jpeg",
-    ) -> Dict[str, Any]:
-        assert self._session is not None, "Client session not initialized"
+    async def delivery(self, action: str, update_id: int, chat_id: int, **fields: Any) -> dict:
+        return await self._post("/api/bot/delivery", payload={"action": action, "updateId": update_id, "chatId": chat_id, **fields})
+
+    async def interact(self, *, chat_id: int, first_name: str, username: str | None, last_name: str | None,
+                       update_id: int, lease: str, action: str, **fields: Any) -> dict:
+        return await self._post("/api/bot/engine", payload={
+            "telegramUserId": chat_id, "telegramChatId": chat_id, "firstName": first_name[:100] or "مستخدم",
+            "username": username[:64] if username else None, "lastName": last_name[:100] if last_name else None,
+            "actionType": action, "delivery": {"updateId": update_id, "lease": lease}, **fields,
+        })
+
+    async def upload_photo(self, chat_id: int, update_id: int, lease: str, image: bytes) -> dict:
         form = aiohttp.FormData()
-        form.add_field("telegramUserId", str(telegram_user_id))
-        form.add_field("telegramChatId", str(telegram_chat_id))
-        form.add_field("firstName", first_name)
-        form.add_field(
-            "file",
-            image_bytes,
-            filename=filename,
-            content_type=mime_type,
-        )
-        async with self._session.post(
-            f"{self._base_url}/api/upload/catbox", data=form
-        ) as resp:
-            return await resp.json()
+        form.add_field("telegramUserId", str(chat_id))
+        form.add_field("updateId", str(update_id))
+        form.add_field("lease", lease)
+        form.add_field("file", image, filename="telegram.jpg", content_type="application/octet-stream")
+        return await self._post("/api/upload/photo", form=form)
+
+    async def qr_png(self, path: str) -> bytes:
+        # Fetch a signed card only from our configured web project, never a caller-provided host.
+        if not re.fullmatch(r"/api/qr/image/[A-Za-z0-9_.-]{35,900}", path):
+            raise BackendError(400)
+        assert self._session is not None
+        async with self._session.get(self._base_url + path, allow_redirects=False) as res:
+            if res.status != 200 or res.content_type != "image/png":
+                raise BackendError(res.status)
+            if (res.content_length or 0) > MAX_QR_BYTES:
+                raise BackendError(413)
+            content = bytearray()
+            async for chunk in res.content.iter_chunked(65536):
+                content.extend(chunk)
+                if len(content) > MAX_QR_BYTES:
+                    raise BackendError(413)
+            return bytes(content)

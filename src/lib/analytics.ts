@@ -30,9 +30,7 @@ export function recordVisit(event: VisitEvent): void {
   buffer.push(event);
   if (buffer.length >= FLUSH_THRESHOLD) {
     void flushVisits();
-    return;
-  }
-  if (!scheduled) {
+  } else if (!scheduled) {
     scheduled = setTimeout(() => {
       scheduled = null;
       void flushVisits();
@@ -41,9 +39,9 @@ export function recordVisit(event: VisitEvent): void {
     scheduled.unref?.();
   }
   try {
-    after(() => {
-      void flushVisits();
-    });
+    // Vercel can freeze the function as soon as all response work is complete.
+    // Returning the flush promise keeps it tracked without delaying the page response.
+    after(() => flushVisits());
   } catch {
     // Outside a request scope the interval timer already covers the flush.
   }

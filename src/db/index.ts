@@ -1,3 +1,4 @@
+import { AsyncLocalStorage } from "node:async_hooks";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import * as schema from "./schema";
@@ -14,8 +15,8 @@ function intFromEnv(name: string, fallback: number, min: number, max: number): n
   return Math.min(max, Math.max(min, Math.round(parsed)));
 }
 
-const poolMax = intFromEnv("DATABASE_POOL_MAX", 20, 2, 60);
-const idleTimeout = intFromEnv("DATABASE_IDLE_TIMEOUT_MS", 30_000, 5_000, 300_000);
+const poolMax = intFromEnv("DATABASE_POOL_MAX", process.env.VERCEL ? 2 : 20, 1, 60);
+const idleTimeout = intFromEnv("DATABASE_IDLE_TIMEOUT_MS", process.env.VERCEL ? 5000 : 30_000, 2_000, 300_000);
 const connectionTimeout = intFromEnv("DATABASE_CONNECTION_TIMEOUT_MS", 5_000, 1_000, 30_000);
 const statementTimeout = intFromEnv("DATABASE_STATEMENT_TIMEOUT_MS", 15_000, 1_000, 120_000);
 
@@ -30,13 +31,15 @@ function createPool(): Pool {
   if (!databaseUrl) {
     throw new Error("DATABASE_URL is required to reach the database.");
   }
+  const pooled = process.env.DATABASE_POOLER_MODE === "transaction" || new URL(databaseUrl).hostname.endsWith(".pooler.supabase.com");
   return new Pool({
     connectionString: databaseUrl,
     max: poolMax,
     idleTimeoutMillis: idleTimeout,
     connectionTimeoutMillis: connectionTimeout,
-    // Server-side guards: a slow or runaway statement never holds a connection hostage.
-    options: `-c statement_timeout=${statementTimeout} -c idle_in_transaction_session_timeout=${statementTimeout * 2} -c lock_timeout=5000`,
+    query_timeout: statementTimeout + 1000,
+    // Managed poolers can reject the PostgreSQL startup 'options' argument.
+    ...(pooled ? {} : { options: `-c statement_timeout=${statementTimeout} -c idle_in_transaction_session_timeout=${statementTimeout * 2} -c lock_timeout=5000` }),
     application_name: "lovecraft-app",
   });
 }
@@ -75,16 +78,24 @@ function getDb() {
  * Drizzle is resolved on first use as well, so importing a route never opens a connection
  * and a missing DATABASE_URL cannot break `next build`.
  */
-export const db = new Proxy({} as ReturnType<typeof drizzle<typeof schema>>, {
+type Database = ReturnType<typeof drizzle<typeof schema>>;
+export type Transaction = Parameters<Parameters<Database["transaction"]>[0]>[0];
+const transactionScope = new AsyncLocalStorage<Transaction>();
+
+export const db = new Proxy({} as Database, {
   get(_target, property) {
-    const instance = getDb();
+    const instance = transactionScope.getStore() ?? getDb();
     const value = Reflect.get(instance, property);
     return typeof value === "function" ? value.bind(instance) : value;
   },
 });
 export * from "./schema";
 
-export type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
+// Share one connection/transaction across the Telegram engine and any nested DB operations.
+// Nested db.transaction calls use Drizzle savepoints. Keep HTTP calls outside this scope.
+export function inDatabaseTransaction<T>(work: (tx: Transaction) => Promise<T>): Promise<T> {
+  return db.transaction((tx) => transactionScope.run(tx, () => work(tx)));
+}
 
 /**
  * Runs a transaction and retries only on transient contention (serialization failure or deadlock).
