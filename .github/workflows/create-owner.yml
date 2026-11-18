@@ -1,26 +1,10 @@
-name: Create LOVECRAFT Owner
+name: LOVECRAFT Owner Setup
 
-on:
-  workflow_dispatch:
-
-permissions:
-  contents: read
+'on': workflow_dispatch
 
 jobs:
-  create-owner:
+  test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Create Owner
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          OWNER_USERNAME: ${{ secrets.OWNER_USERNAME }}
-          OWNER_EMAIL: ${{ secrets.OWNER_EMAIL }}
-          OWNER_PASSWORD: ${{ secrets.OWNER_PASSWORD }}
-        run: node scripts/create-owner.mjs
+      - name: Test workflow
+        run: echo "Workflow syntax is valid"
