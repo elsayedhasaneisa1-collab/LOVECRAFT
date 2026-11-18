@@ -1,0 +1,11 @@
+{
+  "componentGroup": "background",
+  "variantKey": "snow",
+  "nameAr": "ندف الثلج الهادئ",
+  "nameEn": "Snow",
+  "descriptionAr": "بلورات ثلجية ناعمة تتساقط بانسيابية شاعرية.",
+  "githubPath": "templates/shared-components/background/snow.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 6
+}

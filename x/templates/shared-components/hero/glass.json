@@ -1,0 +1,11 @@
+{
+  "componentGroup": "hero",
+  "variantKey": "glass",
+  "nameAr": "بطاقة بلورية فاخرة Glass",
+  "nameEn": "Glass",
+  "descriptionAr": "لوح زجاجي مصقول بضبابية راقية وانعكاس حواف ناعم.",
+  "githubPath": "templates/shared-components/hero/glass.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 7
+}

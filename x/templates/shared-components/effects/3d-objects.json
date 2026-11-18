@@ -1,0 +1,11 @@
+{
+  "componentGroup": "effect",
+  "variantKey": "3d-objects",
+  "nameAr": "مجسمات ثلاثية الأبعاد تفاعلية",
+  "nameEn": "3D Objects",
+  "descriptionAr": "عناصر مجسمة تدور وتتفاعل مع حركة المؤشر.",
+  "githubPath": "templates/shared-components/effects/3d-objects.json",
+  "supportsLiteMode": true,
+  "requires3d": true,
+  "sortOrder": 6
+}

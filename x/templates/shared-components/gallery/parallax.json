@@ -1,0 +1,11 @@
+{
+  "componentGroup": "gallery",
+  "variantKey": "parallax",
+  "nameAr": "معرض الطبقات المتوازية",
+  "nameEn": "Parallax",
+  "descriptionAr": "عمودان متناغمان بارتفاع متدرج يخلقان إيقاعاً بصرياً.",
+  "githubPath": "templates/shared-components/gallery/parallax.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 7
+}

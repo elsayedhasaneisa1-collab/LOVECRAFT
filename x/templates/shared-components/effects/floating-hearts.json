@@ -1,0 +1,11 @@
+{
+  "componentGroup": "effect",
+  "variantKey": "floating-hearts",
+  "nameAr": "نبض القلوب المتطايرة",
+  "nameEn": "Floating Hearts",
+  "descriptionAr": "تطاير قلوب رقيقة عند التفاعل مع الرسالة.",
+  "githubPath": "templates/shared-components/effects/floating-hearts.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 3
+}

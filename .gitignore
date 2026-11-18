@@ -38,5 +38,3 @@ Thumbs.db
 .venv/
 .pytest_cache/
 .coverage
-.vercel
-.env*

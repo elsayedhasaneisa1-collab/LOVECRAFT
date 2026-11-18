@@ -1,0 +1,11 @@
+{
+  "componentGroup": "button",
+  "variantKey": "glass",
+  "nameAr": "زر بلوري شفاف",
+  "nameEn": "Glass",
+  "descriptionAr": "تصميم زجاجي بحدود مضيئة دقيقة.",
+  "githubPath": "templates/shared-components/buttons/glass.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 1
+}

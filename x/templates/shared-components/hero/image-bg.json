@@ -1,0 +1,11 @@
+{
+  "componentGroup": "hero",
+  "variantKey": "image-bg",
+  "nameAr": "خلفية مصوّرة كاملة",
+  "nameEn": "Image Background",
+  "descriptionAr": "صورة غلاف عالية الوضوح مع طبقة تباين سينمائية تحافظ على وضوح النص.",
+  "githubPath": "templates/shared-components/hero/image-bg.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 3
+}

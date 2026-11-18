@@ -1,0 +1,11 @@
+{
+  "componentGroup": "section",
+  "variantKey": "gift-box",
+  "nameAr": "صندوق الهدية التفاعلي",
+  "nameEn": "Gift Box",
+  "descriptionAr": "صندوق ثلاثي الأبعاد يهتز ويُفتح ليكشف الهدية والرسالة.",
+  "githubPath": "templates/shared-components/sections/gift-box.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 12
+}

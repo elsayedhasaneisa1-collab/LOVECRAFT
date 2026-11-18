@@ -1,0 +1,17 @@
+{
+  "slug": "who-knows-better-quiz",
+  "category": "friends",
+  "nameAr": "اختبار مين يعرف الثاني أكثر",
+  "nameEn": "Who Knows Me Better Quiz",
+  "version": "1.0.0",
+  "previewImage": "/images/cat-friends.jpg",
+  "experienceType": "interactive-quiz",
+  "tier": "free",
+  "dependencies": ["motion-engine", "canvas-confetti"],
+  "compatibility": {
+    "browsers": ["Chrome", "Safari", "Edge", "Firefox", "Samsung Internet", "Opera", "Android", "iOS"],
+    "responsive": true,
+    "reducedMotion": true,
+    "webglFallback": true
+  }
+}

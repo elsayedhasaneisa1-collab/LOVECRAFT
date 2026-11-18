@@ -1,0 +1,17 @@
+{
+  "slug": "msg-after-countdown",
+  "category": "messages",
+  "nameAr": "رسالة بعد العد التنازلي",
+  "nameEn": "Countdown Secret Message",
+  "version": "1.0.0",
+  "previewImage": "/images/cat-messages.jpg",
+  "experienceType": "countdown-unlock",
+  "tier": "free",
+  "dependencies": ["canvas-confetti", "motion-engine"],
+  "compatibility": {
+    "browsers": ["Chrome", "Safari", "Edge", "Firefox", "Samsung Internet", "Opera", "Android", "iOS"],
+    "responsive": true,
+    "reducedMotion": true,
+    "webglFallback": true
+  }
+}

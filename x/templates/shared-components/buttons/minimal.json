@@ -1,0 +1,11 @@
+{
+  "componentGroup": "button",
+  "variantKey": "minimal",
+  "nameAr": "زر خطي بسيط",
+  "nameEn": "Minimal",
+  "descriptionAr": "إطار رفيع أنيق يناسب القوالب المعمارية والاحترافية.",
+  "githubPath": "templates/shared-components/buttons/minimal.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 9
+}

@@ -1,0 +1,11 @@
+{
+  "componentGroup": "hero",
+  "variantKey": "3d",
+  "nameAr": "واجهة ثلاثية الأبعاد 3D",
+  "nameEn": "3D",
+  "descriptionAr": "مجسمات هندسية مضيئة تتفاعل مع حركة المؤشر واللمس مع عمق بصري.",
+  "githubPath": "templates/shared-components/hero/3d.json",
+  "supportsLiteMode": true,
+  "requires3d": true,
+  "sortOrder": 2
+}

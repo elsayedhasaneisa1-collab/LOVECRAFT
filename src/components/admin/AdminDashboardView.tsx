@@ -1664,7 +1664,7 @@ export function AdminDashboardView({ admin }: AdminProps) {
                     [
                       ["siteCreationEnabled", "تفعيل إنشاء المواقع الجديدة"],
                       ["continuousSitesEnabled", "تفعيل المواقع المستمرة الأسبوعية"],
-                      ["catboxUploadsEnabled", "تفعيل رفع الصور عبر Vercel Blob"],
+                      ["catboxUploadsEnabled", "تفعيل رفع الصور عبر Catbox"],
                       ["musicFeatureEnabled", "تفعيل الموسيقى الاختيارية"],
                       ["effects3dEnabled", "تفعيل مؤثرات 3D المتقدمة"],
                       ["notificationsEnabled", "تفعيل إشعارات البوت"],
@@ -1713,7 +1713,7 @@ export function AdminDashboardView({ admin }: AdminProps) {
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <h2 className="inline-flex items-center gap-2 text-sm font-bold">
                       <FolderGit2 className="h-4 w-4" />
-                      تكامل GitHub وVercel Blob والدومين والحماية
+                      تكامل GitHub وCatbox والدومين والحماية
                     </h2>
                     <div className="flex gap-2">
                       <button
@@ -1816,7 +1816,8 @@ export function AdminDashboardView({ admin }: AdminProps) {
                         ["databaseConnected", "PostgreSQL"],
                         ["botApiSecretConfigured", "BOT_API_SECRET"],
                         ["githubTokenConfigured", "GITHUB_TOKEN"],
-                        ["vercelBlobConfigured", "Vercel Blob"],
+                        ["catboxConfigured", "Catbox"],
+                        ["catboxUserhashConfigured", "Catbox delete access"],
                         ["qrSigningConfigured", "QR_SIGNING_SECRET"],
                         ["cronSecretConfigured", "CRON_SECRET"],
                       ].map(([k, label]) => (

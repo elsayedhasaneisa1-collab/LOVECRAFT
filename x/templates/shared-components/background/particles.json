@@ -1,0 +1,11 @@
+{
+  "componentGroup": "background",
+  "variantKey": "particles",
+  "nameAr": "ذرات ضوئية سابحة",
+  "nameEn": "Particles",
+  "descriptionAr": "جزيئات مضيئة دقيقة تمنح عمقاً سينمائياً للمشهد.",
+  "githubPath": "templates/shared-components/background/particles.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 5
+}

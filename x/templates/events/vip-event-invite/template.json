@@ -1,0 +1,139 @@
+{
+  "format": 1,
+  "version": "1.0.0",
+  "slug": "vip-event-invite",
+  "category": "events",
+  "title": {
+    "ar": "دعوة مناسبة خاصة",
+    "en": "VIP Private Event Invite"
+  },
+  "descriptionAr": "دعوة حصرية فاخرة بالأسود والذهب للمناسبات الخاصة وحفلات العشاء الراقية.",
+  "experienceType": "celebration-rsvp",
+  "previewImage": "/images/cat-events.jpg",
+  "tier": "premium",
+  "creditCost": 2,
+  "order": 21,
+  "fields": [
+    {
+      "key": "recipientName",
+      "labelAr": "اسم المُهدى إليه",
+      "promptAr": "👤 أرسل اسم الشخص المُهدى إليه الموقع:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "نور"
+    },
+    {
+      "key": "senderName",
+      "labelAr": "اسم المُرسِل",
+      "promptAr": "✍️ أرسل اسمك كما سيظهر في توقيع الموقع:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "أحمد"
+    },
+    {
+      "key": "headline",
+      "labelAr": "العنوان الرئيسي للموقع",
+      "promptAr": "🏷️ أرسل العنوان الرئيسي الذي يتصدر واجهة الموقع:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "دعوة مناسبة خاصة"
+    },
+    {
+      "key": "mainMessage",
+      "labelAr": "الرسالة الأساسية",
+      "promptAr": "💌 أرسل رسالتك الكاملة التي تود عرضها داخل الموقع:",
+      "type": "textarea",
+      "required": true,
+      "placeholderAr": "اكتب كلماتك الصادقة هنا..."
+    },
+    {
+      "key": "eventDate",
+      "labelAr": "التاريخ المميز",
+      "promptAr": "📅 أرسل التاريخ المرتبط بالمناسبة بصيغة YYYY-MM-DD (أو اختر التخطي):",
+      "type": "date",
+      "required": false,
+      "placeholderAr": "2026-05-20"
+    },
+    {
+      "key": "finalSurpriseText",
+      "labelAr": "رسالة المشهد الختامي",
+      "promptAr": "🎁 أرسل عبارة المفاجأة الختامية التي تظهر في نهاية التجربة:",
+      "type": "textarea",
+      "required": false,
+      "placeholderAr": "دمتَ أجمل ما في الأيام!"
+    },
+    {
+      "key": "eventLocation",
+      "labelAr": "مكان المناسبة أو القاعة",
+      "promptAr": "📍 أرسل مكان المناسبة أو عنوان الاحتفال (اختياري):",
+      "type": "text",
+      "required": false,
+      "placeholderAr": "قاعة القصر الذهبي — الساعة الثامنة مساءً"
+    }
+  ],
+  "config": {
+    "paletteId": "royal-gold",
+    "themeColors": {
+      "primary": "#d97706",
+      "secondary": "#fbbf24",
+      "accent": "#fef08a",
+      "background": "#0c0a09",
+      "surface": "#1c1917",
+      "text": "#fafaf9",
+      "mode": "dark"
+    },
+    "componentsConfig": {
+      "hero": "cinematic",
+      "background": "golden",
+      "typography": "cinematic-text",
+      "button": "minimal",
+      "gallery": "cinematic",
+      "sections": [
+        "countdown",
+        "features",
+        "contact",
+        "final-surprise"
+      ],
+      "effects": [
+        "particles",
+        "stars",
+        "smooth-transitions"
+      ],
+      "introStyle": "curtain",
+      "liteModeDefault": false
+    },
+    "musicTrack": "golden-celebration",
+    "sampleCustomFields": {
+      "eventLocation": "القاعة الملكية — تمام الساعة الثامنة مساءً",
+      "eventTime": "08:00 مساءً"
+    },
+    "experienceType": "celebration-rsvp"
+  },
+  "dependencies": [],
+  "compatibility": {
+    "browsers": [
+      "Chrome 90+",
+      "Safari 14+",
+      "Edge 90+",
+      "Firefox 88+",
+      "Samsung Internet 15+",
+      "Opera 76+",
+      "Android WebView",
+      "iOS Safari 14+"
+    ],
+    "responsive": [
+      "mobile-first",
+      "tablet",
+      "desktop"
+    ],
+    "inputs": [
+      "touch",
+      "mouse",
+      "keyboard"
+    ],
+    "reducedMotion": true,
+    "webglFallback": true,
+    "liteMode": true
+  },
+  "footer": "shared-global"
+}

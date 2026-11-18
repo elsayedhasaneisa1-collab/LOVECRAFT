@@ -1,0 +1,11 @@
+{
+  "componentGroup": "gallery",
+  "variantKey": "carousel",
+  "nameAr": "شريط منزلق تفاعلي Carousel",
+  "nameEn": "Carousel",
+  "descriptionAr": "تنقل سلس بالأسهم واللمس بين الصور مع التعليقات.",
+  "githubPath": "templates/shared-components/gallery/carousel.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 3
+}

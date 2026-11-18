@@ -1,0 +1,11 @@
+{
+  "componentGroup": "background",
+  "variantKey": "video",
+  "nameAr": "أطياف سينمائية متحركة",
+  "nameEn": "Video",
+  "descriptionAr": "إضاءات عدسة متحركة بأسلوب الأفلام الوثائقية الراقية.",
+  "githubPath": "templates/shared-components/background/video.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 8
+}

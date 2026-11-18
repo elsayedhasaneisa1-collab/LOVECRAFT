@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import { del } from "@vercel/blob";
+import { deleteFromCatbox } from "./catbox";
 import { db } from "@/db";
 
 export interface RetentionPolicy {
@@ -89,10 +90,30 @@ export async function runRetention(policy: RetentionPolicy = retentionPolicy()):
   );
   removed.orphanAssets = await countRows(sql`
     DELETE FROM site_assets WHERE id IN (
-      SELECT id FROM site_assets WHERE site_id IS NULL AND provider NOT IN ('vercel-blob','vercel-blob-deleting')
+      SELECT id FROM site_assets WHERE site_id IS NULL AND provider NOT IN ('vercel-blob','vercel-blob-deleting','catbox','catbox-deleting')
         AND created_at < NOW() - (${policy.orphanAssetDays} * INTERVAL '1 day') ORDER BY created_at LIMIT 500
     ) AND site_id IS NULL
   `);
+
+
+  // Catbox assets can only be remotely deleted when a Catbox userhash is configured.
+  // Keep orphan records until then so cleanup can be retried safely.
+  if (process.env.CATBOX_USERHASH?.trim()) {
+    const staleCatbox = await db.execute(sql`
+      UPDATE site_assets SET provider = 'catbox-deleting'
+      WHERE id IN (
+        SELECT id FROM site_assets WHERE site_id IS NULL AND provider IN ('catbox','catbox-deleting')
+          AND created_at < NOW() - (${policy.orphanAssetDays} * INTERVAL '1 day') ORDER BY created_at LIMIT 100
+      ) AND site_id IS NULL AND provider IN ('catbox','catbox-deleting') RETURNING id, catbox_url
+    `);
+    for (const entry of staleCatbox.rows) {
+      if (typeof entry.catbox_url === "string" && await deleteFromCatbox(entry.catbox_url)) {
+        removed.orphanAssets += await countRows(sql`
+          DELETE FROM site_assets WHERE id = ${Number(entry.id)} AND site_id IS NULL AND provider = 'catbox-deleting'
+        `);
+      }
+    }
+  }
 
   // Claim only abandoned uploads, not media on published sites. If Blob is temporarily unavailable,
   // the deletion markers remain for the next scheduled cleanup. Do not hold a DB connection across HTTP.

@@ -1,0 +1,11 @@
+{
+  "componentGroup": "background",
+  "variantKey": "glassmorphism",
+  "nameAr": "بلورات ضبابية Glassmorphism",
+  "nameEn": "Glassmorphism",
+  "descriptionAr": "كرات ضوئية ناعمة خلف طبقات زجاجية مصقولة.",
+  "githubPath": "templates/shared-components/background/glassmorphism.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 9
+}

@@ -1,0 +1,11 @@
+{
+  "componentGroup": "effect",
+  "variantKey": "stars",
+  "nameAr": "بريق النجوم المتناثرة",
+  "nameEn": "Stars",
+  "descriptionAr": "ومضات نجمية ذهبية تزين اللحظات الحاسمة.",
+  "githubPath": "templates/shared-components/effects/stars.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 4
+}

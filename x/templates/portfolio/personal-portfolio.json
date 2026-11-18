@@ -1,0 +1,17 @@
+{
+  "slug": "personal-portfolio",
+  "category": "portfolio",
+  "nameAr": "Portfolio شخصي",
+  "nameEn": "Personal Creative Portfolio",
+  "version": "1.0.0",
+  "previewImage": "/images/cat-portfolio.jpg",
+  "experienceType": "portfolio-studio",
+  "tier": "free",
+  "dependencies": ["motion-engine"],
+  "compatibility": {
+    "browsers": ["Chrome", "Safari", "Edge", "Firefox", "Samsung Internet", "Opera", "Android", "iOS"],
+    "responsive": true,
+    "reducedMotion": true,
+    "webglFallback": true
+  }
+}

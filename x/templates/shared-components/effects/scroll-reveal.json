@@ -1,0 +1,11 @@
+{
+  "componentGroup": "effect",
+  "variantKey": "scroll-reveal",
+  "nameAr": "ظهور تدريجي عند التمرير",
+  "nameEn": "Scroll Reveal",
+  "descriptionAr": "انكشاف متتابع للأقسام والصور أثناء تصفح الموقع.",
+  "githubPath": "templates/shared-components/effects/scroll-reveal.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 7
+}

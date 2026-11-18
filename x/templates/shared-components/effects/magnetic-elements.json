@@ -1,0 +1,11 @@
+{
+  "componentGroup": "effect",
+  "variantKey": "magnetic-elements",
+  "nameAr": "عناصر مغناطيسية ذكية",
+  "nameEn": "Magnetic Elements",
+  "descriptionAr": "انجذاب لطيف للبطاقات والأزرار عند الاقتراب منها.",
+  "githubPath": "templates/shared-components/effects/magnetic-elements.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 9
+}

@@ -1,0 +1,11 @@
+{
+  "componentGroup": "button",
+  "variantKey": "3d",
+  "nameAr": "زر مجسم بارز 3D",
+  "nameEn": "3D",
+  "descriptionAr": "عمق فيزيائي حقيقي ينضغط لأسفل عند النقر.",
+  "githubPath": "templates/shared-components/buttons/3d.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 3
+}

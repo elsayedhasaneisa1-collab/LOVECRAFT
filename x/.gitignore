@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Python bot
+bot/.venv/
+bot/venv/
+bot/__pycache__/
+**/__pycache__/
+*.py[cod]
+
+# Build output
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment variables & secrets (NEVER commit)
+.env
+.env.*
+!.env.example
+
+# Generated QR test cards and optional sandbox-only release downloads
+public/qr/
+public/release-downloads/
+
+# Logs & OS
+*.log
+.DS_Store
+Thumbs.db
+
+# Local tooling
+.vscode/
+.idea/
+.vercel/
+.venv/
+.pytest_cache/
+.coverage

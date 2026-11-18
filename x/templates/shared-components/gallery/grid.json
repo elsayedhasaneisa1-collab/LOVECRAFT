@@ -1,0 +1,11 @@
+{
+  "componentGroup": "gallery",
+  "variantKey": "grid",
+  "nameAr": "شبكة متناسقة Grid",
+  "nameEn": "Grid",
+  "descriptionAr": "عرض منظم بنسب أبعاد موحدة وتكبير سلس.",
+  "githubPath": "templates/shared-components/gallery/grid.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 1
+}

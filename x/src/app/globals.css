@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+:root { --font-cairo: 'Cairo'; --font-jakarta: 'Plus Jakarta Sans'; }
+@media print { [data-lovecraft-global-footer] { display:block!important; } button { display:none!important; } }
+
+@layer base {
+  html,
+  body {
+    font-family: var(--font-cairo), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      sans-serif;
+    overflow-x: clip;
+  }
+
+  [dir="ltr"] {
+    font-family: var(--font-jakarta), var(--font-cairo), system-ui, sans-serif;
+  }
+}
+
+@keyframes lcFadeUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes lcSlowFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(14px, -18px, 0) scale(1.05);
+  }
+}
+
+@keyframes lcDrift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translate3d(0, -24px, 0);
+    opacity: 0.65;
+  }
+}
+
+.lc-fade-up {
+  animation: lcFadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.lc-slow-float {
+  animation: lcSlowFloat 11s ease-in-out infinite;
+}
+
+.lc-drift {
+  animation: lcDrift 7.5s ease-in-out infinite;
+}
+
+/* Full accessibility support for prefers-reduced-motion across all browsers */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

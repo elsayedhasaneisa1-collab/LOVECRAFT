@@ -1,0 +1,145 @@
+{
+  "format": 1,
+  "version": "1.0.0",
+  "slug": "friends-secrets-box",
+  "category": "friends",
+  "title": {
+    "ar": "صندوق أسرار",
+    "en": "Friends Secret Vault"
+  },
+  "descriptionAr": "خزنة الشلة السرية التي لا تُفتح إلا بكلمة السر المتفق عليها بينكم.",
+  "experienceType": "secret-vault",
+  "previewImage": "/images/cat-friends.jpg",
+  "tier": "free",
+  "creditCost": 1,
+  "order": 4,
+  "fields": [
+    {
+      "key": "recipientName",
+      "labelAr": "اسم المُهدى إليه",
+      "promptAr": "👤 أرسل اسم الشخص المُهدى إليه الموقع:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "نور"
+    },
+    {
+      "key": "senderName",
+      "labelAr": "اسم المُرسِل",
+      "promptAr": "✍️ أرسل اسمك كما سيظهر في توقيع الموقع:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "أحمد"
+    },
+    {
+      "key": "headline",
+      "labelAr": "العنوان الرئيسي للموقع",
+      "promptAr": "🏷️ أرسل العنوان الرئيسي الذي يتصدر واجهة الموقع:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "صندوق أسرار"
+    },
+    {
+      "key": "mainMessage",
+      "labelAr": "الرسالة الأساسية",
+      "promptAr": "💌 أرسل رسالتك الكاملة التي تود عرضها داخل الموقع:",
+      "type": "textarea",
+      "required": true,
+      "placeholderAr": "اكتب كلماتك الصادقة هنا..."
+    },
+    {
+      "key": "eventDate",
+      "labelAr": "التاريخ المميز",
+      "promptAr": "📅 أرسل التاريخ المرتبط بالمناسبة بصيغة YYYY-MM-DD (أو اختر التخطي):",
+      "type": "date",
+      "required": false,
+      "placeholderAr": "2026-05-20"
+    },
+    {
+      "key": "finalSurpriseText",
+      "labelAr": "رسالة المشهد الختامي",
+      "promptAr": "🎁 أرسل عبارة المفاجأة الختامية التي تظهر في نهاية التجربة:",
+      "type": "textarea",
+      "required": false,
+      "placeholderAr": "دمتَ أجمل ما في الأيام!"
+    },
+    {
+      "key": "secretCode",
+      "labelAr": "الرمز السري لفتح الخزنة",
+      "promptAr": "🔐 أرسل الرمز السري لفتح الرسالة (مثال: 2026 أو كلمة قصيرة):",
+      "type": "code",
+      "required": true,
+      "placeholderAr": "2026"
+    },
+    {
+      "key": "secretHint",
+      "labelAr": "تلميح الرمز السري",
+      "promptAr": "💡 أرسل تلميحاً لطيفاً يساعد المستلم على معرفة الرمز:",
+      "type": "text",
+      "required": false,
+      "placeholderAr": "السنة التي بدأت فيها أجمل أيامنا"
+    }
+  ],
+  "config": {
+    "paletteId": "midnight-cosmos",
+    "themeColors": {
+      "primary": "#6366f1",
+      "secondary": "#818cf8",
+      "accent": "#38bdf8",
+      "background": "#060916",
+      "surface": "#10162f",
+      "text": "#eef2ff",
+      "mode": "dark"
+    },
+    "componentsConfig": {
+      "hero": "glass",
+      "background": "stars",
+      "typography": "typewriter",
+      "button": "neon",
+      "gallery": "memory-gallery",
+      "sections": [
+        "interactive-messages",
+        "final-surprise"
+      ],
+      "effects": [
+        "stars",
+        "particles",
+        "magnetic-elements"
+      ],
+      "introStyle": "vault-lock",
+      "liteModeDefault": false
+    },
+    "musicTrack": "joyful-chimes",
+    "sampleCustomFields": {
+      "secretCode": "2026",
+      "secretHint": "عام اللحظات الأجمل (2026)"
+    },
+    "experienceType": "secret-vault"
+  },
+  "dependencies": [],
+  "compatibility": {
+    "browsers": [
+      "Chrome 90+",
+      "Safari 14+",
+      "Edge 90+",
+      "Firefox 88+",
+      "Samsung Internet 15+",
+      "Opera 76+",
+      "Android WebView",
+      "iOS Safari 14+"
+    ],
+    "responsive": [
+      "mobile-first",
+      "tablet",
+      "desktop"
+    ],
+    "inputs": [
+      "touch",
+      "mouse",
+      "keyboard"
+    ],
+    "reducedMotion": true,
+    "webglFallback": true,
+    "liteMode": true
+  },
+  "footer": "shared-global"
+}

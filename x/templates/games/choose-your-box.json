@@ -1,0 +1,17 @@
+{
+  "slug": "choose-your-box",
+  "category": "games",
+  "nameAr": "اختار صندوقك",
+  "nameEn": "Choose Your Mystery Box",
+  "version": "1.0.0",
+  "previewImage": "/images/cat-games.jpg",
+  "experienceType": "mystery-boxes",
+  "tier": "free",
+  "dependencies": ["three", "canvas-confetti", "motion-engine"],
+  "compatibility": {
+    "browsers": ["Chrome", "Safari", "Edge", "Firefox", "Samsung Internet", "Opera", "Android", "iOS"],
+    "responsive": true,
+    "reducedMotion": true,
+    "webglFallback": true
+  }
+}

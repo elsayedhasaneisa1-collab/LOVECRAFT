@@ -1,0 +1,118 @@
+{
+  "checkedAt": "2026-11-17T20:54:50.624Z",
+  "handle": "@LoveCraftMakerBot",
+  "cards": [
+    {
+      "shape": "love",
+      "shapeLabelAr": "شكل قلب",
+      "file": "/qr/qr-love-b808521d77be2e75.png",
+      "bytes": 286568,
+      "decodedTo": "https://lovecraft.app/s/noor-envelope",
+      "cached": true,
+      "scannedAtWidths": {
+        "700": "https://lovecraft.app/s/noor-envelope",
+        "800": "https://lovecraft.app/s/noor-envelope",
+        "900": "https://lovecraft.app/s/noor-envelope",
+        "1000": "https://lovecraft.app/s/noor-envelope",
+        "1200": "https://lovecraft.app/s/noor-envelope",
+        "1400": "https://lovecraft.app/s/noor-envelope"
+      }
+    },
+    {
+      "shape": "events",
+      "shapeLabelAr": "شكل هدية",
+      "file": "/qr/qr-events-11cfc0eb35232e0b.png",
+      "bytes": 285001,
+      "decodedTo": "https://lovecraft.app/s/layla-omar-wedding",
+      "cached": true,
+      "scannedAtWidths": {
+        "700": "https://lovecraft.app/s/layla-omar-wedding",
+        "800": "https://lovecraft.app/s/layla-omar-wedding",
+        "900": "https://lovecraft.app/s/layla-omar-wedding",
+        "1000": "https://lovecraft.app/s/layla-omar-wedding",
+        "1200": "https://lovecraft.app/s/layla-omar-wedding",
+        "1400": "https://lovecraft.app/s/layla-omar-wedding"
+      }
+    },
+    {
+      "shape": "friends",
+      "shapeLabelAr": "شكل حلقتين",
+      "file": "/qr/qr-friends-153f3dd2abab72b3.png",
+      "bytes": 264114,
+      "decodedTo": "https://lovecraft.app/s/squad-friendship-quiz",
+      "cached": true,
+      "scannedAtWidths": {
+        "700": "https://lovecraft.app/s/squad-friendship-quiz",
+        "800": "https://lovecraft.app/s/squad-friendship-quiz",
+        "900": "https://lovecraft.app/s/squad-friendship-quiz",
+        "1000": "https://lovecraft.app/s/squad-friendship-quiz",
+        "1200": "https://lovecraft.app/s/squad-friendship-quiz",
+        "1400": "https://lovecraft.app/s/squad-friendship-quiz"
+      }
+    },
+    {
+      "shape": "games",
+      "shapeLabelAr": "شكل ذراع تحكم",
+      "file": "/qr/qr-games-d54ec978f827265b.png",
+      "bytes": 260280,
+      "decodedTo": "https://lovecraft.app/s/golden-mystery-boxes",
+      "cached": true,
+      "scannedAtWidths": {
+        "700": "https://lovecraft.app/s/golden-mystery-boxes",
+        "800": "https://lovecraft.app/s/golden-mystery-boxes",
+        "900": "https://lovecraft.app/s/golden-mystery-boxes",
+        "1000": "https://lovecraft.app/s/golden-mystery-boxes",
+        "1200": "https://lovecraft.app/s/golden-mystery-boxes",
+        "1400": "https://lovecraft.app/s/golden-mystery-boxes"
+      }
+    },
+    {
+      "shape": "portfolio",
+      "shapeLabelAr": "شكل لوحة ألوان",
+      "file": "/qr/qr-portfolio-a1172c8116b66a95.png",
+      "bytes": 222975,
+      "decodedTo": "https://lovecraft.app/s/karim-creative-studio",
+      "cached": true,
+      "scannedAtWidths": {
+        "700": "https://lovecraft.app/s/karim-creative-studio",
+        "800": "https://lovecraft.app/s/karim-creative-studio",
+        "900": "https://lovecraft.app/s/karim-creative-studio",
+        "1000": "https://lovecraft.app/s/karim-creative-studio",
+        "1200": "https://lovecraft.app/s/karim-creative-studio",
+        "1400": "https://lovecraft.app/s/karim-creative-studio"
+      }
+    },
+    {
+      "shape": "messages",
+      "shapeLabelAr": "شكل ظرف",
+      "file": "/qr/qr-messages-fbc233c7909ebbbd.png",
+      "bytes": 228083,
+      "decodedTo": "https://lovecraft.app/s/starlight-countdown",
+      "cached": true,
+      "scannedAtWidths": {
+        "700": "https://lovecraft.app/s/starlight-countdown",
+        "800": "https://lovecraft.app/s/starlight-countdown",
+        "900": "https://lovecraft.app/s/starlight-countdown",
+        "1000": "https://lovecraft.app/s/starlight-countdown",
+        "1200": "https://lovecraft.app/s/starlight-countdown",
+        "1400": "https://lovecraft.app/s/starlight-countdown"
+      }
+    },
+    {
+      "shape": "bot",
+      "shapeLabelAr": "شكل نجمة",
+      "file": "/qr/qr-bot-e10e708bd364b86b.png",
+      "bytes": 253744,
+      "decodedTo": "https://t.me/LoveCraftMakerBot?start=REF83921",
+      "cached": true,
+      "scannedAtWidths": {
+        "700": "https://t.me/LoveCraftMakerBot?start=REF83921",
+        "800": "https://t.me/LoveCraftMakerBot?start=REF83921",
+        "900": "https://t.me/LoveCraftMakerBot?start=REF83921",
+        "1000": "https://t.me/LoveCraftMakerBot?start=REF83921",
+        "1200": "https://t.me/LoveCraftMakerBot?start=REF83921",
+        "1400": "https://t.me/LoveCraftMakerBot?start=REF83921"
+      }
+    }
+  ]
+}

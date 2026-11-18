@@ -1,0 +1,11 @@
+{
+  "componentGroup": "button",
+  "variantKey": "svg-icons",
+  "nameAr": "زر بأيقونة هندسية",
+  "nameEn": "SVG Icons",
+  "descriptionAr": "مزود بأيقونة متجهة تتحرك باتجاه الإجراء.",
+  "githubPath": "templates/shared-components/buttons/svg-icons.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 6
+}

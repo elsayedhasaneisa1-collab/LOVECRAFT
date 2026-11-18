@@ -1,0 +1,11 @@
+{
+  "componentGroup": "button",
+  "variantKey": "gradient",
+  "nameAr": "زر متدرج فاخر",
+  "nameEn": "Gradient",
+  "descriptionAr": "مزيج متناغم بين اللون الأساسي والثانوي.",
+  "githubPath": "templates/shared-components/buttons/gradient.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 4
+}

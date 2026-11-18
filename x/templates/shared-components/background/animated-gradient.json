@@ -1,0 +1,11 @@
+{
+  "componentGroup": "background",
+  "variantKey": "animated-gradient",
+  "nameAr": "تدرج متموج حي",
+  "nameEn": "Animated Gradient",
+  "descriptionAr": "أمواج لونية هادئة تتنفس باستمرار خلف المحتوى.",
+  "githubPath": "templates/shared-components/background/animated-gradient.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 2
+}

@@ -1,0 +1,11 @@
+{
+  "componentGroup": "typography",
+  "variantKey": "cinematic-text",
+  "nameAr": "عناوين سينمائية فخمة",
+  "nameEn": "Cinematic Text",
+  "descriptionAr": "تباعد محسوب ووزن طباعي مهيب مستوحى من شارات الأفلام.",
+  "githubPath": "templates/shared-components/typography/cinematic-text.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 6
+}

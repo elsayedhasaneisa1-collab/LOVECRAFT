@@ -1,0 +1,11 @@
+{
+  "componentGroup": "background",
+  "variantKey": "golden",
+  "nameAr": "بريق الذهب الملكي",
+  "nameEn": "Golden",
+  "descriptionAr": "غبار ذهبي دافئ ولمعان احتفالي فاخر للمناسبات.",
+  "githubPath": "templates/shared-components/background/golden.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 11
+}

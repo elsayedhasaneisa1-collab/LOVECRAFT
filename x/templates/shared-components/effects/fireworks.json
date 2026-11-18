@@ -1,0 +1,11 @@
+{
+  "componentGroup": "effect",
+  "variantKey": "fireworks",
+  "nameAr": "ألعاب نارية احتفالية",
+  "nameEn": "Fireworks",
+  "descriptionAr": "عروض ألعاب نارية متعددة الدفعات للمناسبات السعيدة.",
+  "githubPath": "templates/shared-components/effects/fireworks.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 5
+}

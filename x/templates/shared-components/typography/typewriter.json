@@ -1,0 +1,11 @@
+{
+  "componentGroup": "typography",
+  "variantKey": "typewriter",
+  "nameAr": "كتابة حية حرفاً بحرف",
+  "nameEn": "Typewriter",
+  "descriptionAr": "تأثير الآلة الكاتبة مع مؤشر نابض يمنح الرسالة حميمية خاصة.",
+  "githubPath": "templates/shared-components/typography/typewriter.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 1
+}

@@ -1,0 +1,11 @@
+{
+  "componentGroup": "hero",
+  "variantKey": "video",
+  "nameAr": "كادر سينمائي متحرك Video",
+  "nameEn": "Video",
+  "descriptionAr": "إطار شاشة عريضة مع شريط سينمائي وحركة ضوئية مستمرة ناعمة.",
+  "githubPath": "templates/shared-components/hero/video.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 6
+}

@@ -1,0 +1,140 @@
+{
+  "format": 1,
+  "version": "1.0.0",
+  "slug": "friends-gathering-invite",
+  "category": "events",
+  "title": {
+    "ar": "دعوة تجمع أصدقاء",
+    "en": "Friends Gathering Invite"
+  },
+  "descriptionAr": "دعوة دافئة للمّة الأصدقاء مع برنامج الأمسية، العد التنازلي، وتأكيد الحضور.",
+  "experienceType": "celebration-rsvp",
+  "previewImage": "/images/cat-events.jpg",
+  "tier": "free",
+  "creditCost": 1,
+  "order": 14,
+  "fields": [
+    {
+      "key": "recipientName",
+      "labelAr": "اسم المُهدى إليه",
+      "promptAr": "👤 أرسل اسم الشخص المُهدى إليه الموقع:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "نور"
+    },
+    {
+      "key": "senderName",
+      "labelAr": "اسم المُرسِل",
+      "promptAr": "✍️ أرسل اسمك كما سيظهر في توقيع الموقع:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "أحمد"
+    },
+    {
+      "key": "headline",
+      "labelAr": "العنوان الرئيسي للموقع",
+      "promptAr": "🏷️ أرسل العنوان الرئيسي الذي يتصدر واجهة الموقع:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "دعوة تجمع أصدقاء"
+    },
+    {
+      "key": "mainMessage",
+      "labelAr": "الرسالة الأساسية",
+      "promptAr": "💌 أرسل رسالتك الكاملة التي تود عرضها داخل الموقع:",
+      "type": "textarea",
+      "required": true,
+      "placeholderAr": "اكتب كلماتك الصادقة هنا..."
+    },
+    {
+      "key": "eventDate",
+      "labelAr": "التاريخ المميز",
+      "promptAr": "📅 أرسل التاريخ المرتبط بالمناسبة بصيغة YYYY-MM-DD (أو اختر التخطي):",
+      "type": "date",
+      "required": false,
+      "placeholderAr": "2026-05-20"
+    },
+    {
+      "key": "finalSurpriseText",
+      "labelAr": "رسالة المشهد الختامي",
+      "promptAr": "🎁 أرسل عبارة المفاجأة الختامية التي تظهر في نهاية التجربة:",
+      "type": "textarea",
+      "required": false,
+      "placeholderAr": "دمتَ أجمل ما في الأيام!"
+    },
+    {
+      "key": "eventLocation",
+      "labelAr": "مكان المناسبة أو القاعة",
+      "promptAr": "📍 أرسل مكان المناسبة أو عنوان الاحتفال (اختياري):",
+      "type": "text",
+      "required": false,
+      "placeholderAr": "قاعة القصر الذهبي — الساعة الثامنة مساءً"
+    }
+  ],
+  "config": {
+    "paletteId": "warm-sunset",
+    "themeColors": {
+      "primary": "#ea580c",
+      "secondary": "#f97316",
+      "accent": "#facc15",
+      "background": "#120c08",
+      "surface": "#231710",
+      "text": "#fff7ed",
+      "mode": "dark"
+    },
+    "componentsConfig": {
+      "hero": "split-screen",
+      "background": "nature",
+      "typography": "split-text",
+      "button": "interactive",
+      "gallery": "memory-gallery",
+      "sections": [
+        "countdown",
+        "cards",
+        "contact",
+        "final-surprise"
+      ],
+      "effects": [
+        "confetti",
+        "scroll-reveal"
+      ],
+      "introStyle": "minimal-fade",
+      "liteModeDefault": false
+    },
+    "musicTrack": "golden-celebration",
+    "sampleCustomFields": {
+      "eventLocation": "القاعة الملكية — تمام الساعة الثامنة مساءً",
+      "eventTime": "08:00 مساءً"
+    },
+    "experienceType": "celebration-rsvp"
+  },
+  "dependencies": [
+    "canvas-confetti"
+  ],
+  "compatibility": {
+    "browsers": [
+      "Chrome 90+",
+      "Safari 14+",
+      "Edge 90+",
+      "Firefox 88+",
+      "Samsung Internet 15+",
+      "Opera 76+",
+      "Android WebView",
+      "iOS Safari 14+"
+    ],
+    "responsive": [
+      "mobile-first",
+      "tablet",
+      "desktop"
+    ],
+    "inputs": [
+      "touch",
+      "mouse",
+      "keyboard"
+    ],
+    "reducedMotion": true,
+    "webglFallback": true,
+    "liteMode": true
+  },
+  "footer": "shared-global"
+}

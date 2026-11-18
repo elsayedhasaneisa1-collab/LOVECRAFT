@@ -30,7 +30,7 @@ git push origin main
 - Vercel يشغّل الكود، وليس خادم PostgreSQL مدمجًا. استخدم **Supabase PostgreSQL** كما هو في المشروع، أو اربطه من Marketplace. Supabase مسؤول عن تخزين البيانات فقط؛ لا توجد عليه استضافة للموقع أو البوت.
 - من بيئة موثوقة اتصل بقاعدة البيانات المقصودة عبر اتصال migrations مباشر أو Session Pooler، وطبّق `npx drizzle-kit push`، ثم `sql/rls_policies.sql` و`sql/resource-efficiency.sql` باستخدام `psql` مع إيقاف التنفيذ عند الخطأ. راجع تغييرات المخطط وخذ نسخة احتياطية قبل تحديث قاعدة موجودة. يتضمن المخطط جدول `telegram_deliveries`، الذي يمنع تكرار تأثير تحديثات Telegram بعد تبدّل نسخ Functions.
 - في **مشروع الموقع** اضبط `DATABASE_URL` على رابط Transaction Pooler من Supabase مع TLS. الإعداد الافتراضي هو اتصالان لكل نسخة من Function. لا تحدّث المخطط من داخل أمر Build.
-- اربط **Public Vercel Blob** بمشروع الموقع، وتأكد من وجود `BLOB_READ_WRITE_TOKEN` في بيئة الإنتاج. الصور الجديدة تُضغط إلى WebP (إطار واحد، بلا بيانات EXIF) وتحفظ على Vercel Blob. PostgreSQL يحفظ الرابط فقط. حد الصورة 4 MiB. ملفات Catbox القديمة تظل قابلة للعرض كما هي؛ لا يتم إرسال صور جديدة إليها. حذف الرابط من الموقع لا يجعل رابط Blob العام خاصًا.
+- تُرفع الصور الجديدة إلى **Catbox** بعد التحقق منها وتحويلها إلى WebP وإزالة بيانات EXIF، ويحفظ PostgreSQL الرابط والبيانات الوصفية فقط. لا تحتاج إلى Vercel Blob لرفع الصور. أضف `CATBOX_USERHASH` اختياريًا في بيئة الموقع إذا أردت تمكين حذف الصور المهجورة من Catbox؛ بدونه يعمل الرفع المجهول، لكن لا يمكن حذف الملفات من Catbox تلقائيًا. روابط الصور عامة لمن يمتلكها، لذلك لا ترفع صورًا خاصة.
 
 ## 2. اضبط الأسرار لكل مشروع
 
@@ -38,7 +38,7 @@ git push origin main
 | --- | :---: | :---: |
 | `DATABASE_URL` | ✓ | – |
 | `NEXT_PUBLIC_APP_URL` | ✓، رابط إنتاج الموقع HTTPS | – |
-| `BLOB_READ_WRITE_TOKEN` | ✓ لرفع صور جديدة | – |
+| `CATBOX_USERHASH` | اختياري؛ للحذف التلقائي فقط | – |
 | `BOT_API_SECRET` | ✓ | ✓، **نفس القيمة** |
 | `CRON_SECRET` | ✓ لتشغيل تنظيف البيانات والصلاحية | – |
 | `TELEGRAM_BOT_USERNAME` | `LoveCraftMakerBot` | – |

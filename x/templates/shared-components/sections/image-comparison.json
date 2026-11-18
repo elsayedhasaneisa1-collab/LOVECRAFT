@@ -1,0 +1,11 @@
+{
+  "componentGroup": "section",
+  "variantKey": "image-comparison",
+  "nameAr": "مقارنة الصورتين التفاعلية",
+  "nameEn": "Image Comparison",
+  "descriptionAr": "مقارنة بين الأمس واليوم بسحب سلس يدعم اللمس والفأرة.",
+  "githubPath": "templates/shared-components/sections/image-comparison.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 16
+}

@@ -1,0 +1,11 @@
+{
+  "componentGroup": "hero",
+  "variantKey": "countdown",
+  "nameAr": "واجهة العد التنازلي الحية Countdown",
+  "nameEn": "Countdown",
+  "descriptionAr": "مؤقت رقمي أنيق في قلب الواجهة يحسب اللحظات بدقة.",
+  "githubPath": "templates/shared-components/hero/countdown.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 10
+}

@@ -1,0 +1,155 @@
+{
+  "format": 1,
+  "version": "1.0.0",
+  "slug": "true-or-false-game",
+  "category": "games",
+  "title": {
+    "ar": "صح أم غلط",
+    "en": "True or False Arena"
+  },
+  "descriptionAr": "مواجهة سريعة بنظام «صح أم غلط» مع تأثيرات فورية لكل إجابة وكشف الحقيقة.",
+  "experienceType": "true-false-game",
+  "previewImage": "/images/cat-games.jpg",
+  "tier": "free",
+  "creditCost": 1,
+  "order": 4,
+  "fields": [
+    {
+      "key": "recipientName",
+      "labelAr": "اسم المُهدى إليه",
+      "promptAr": "👤 أرسل اسم الشخص المُهدى إليه الموقع:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "نور"
+    },
+    {
+      "key": "senderName",
+      "labelAr": "اسم المُرسِل",
+      "promptAr": "✍️ أرسل اسمك كما سيظهر في توقيع الموقع:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "أحمد"
+    },
+    {
+      "key": "headline",
+      "labelAr": "العنوان الرئيسي للموقع",
+      "promptAr": "🏷️ أرسل العنوان الرئيسي الذي يتصدر واجهة الموقع:",
+      "type": "text",
+      "required": true,
+      "placeholderAr": "صح أم غلط"
+    },
+    {
+      "key": "mainMessage",
+      "labelAr": "الرسالة الأساسية",
+      "promptAr": "💌 أرسل رسالتك الكاملة التي تود عرضها داخل الموقع:",
+      "type": "textarea",
+      "required": true,
+      "placeholderAr": "اكتب كلماتك الصادقة هنا..."
+    },
+    {
+      "key": "eventDate",
+      "labelAr": "التاريخ المميز",
+      "promptAr": "📅 أرسل التاريخ المرتبط بالمناسبة بصيغة YYYY-MM-DD (أو اختر التخطي):",
+      "type": "date",
+      "required": false,
+      "placeholderAr": "2026-05-20"
+    },
+    {
+      "key": "finalSurpriseText",
+      "labelAr": "رسالة المشهد الختامي",
+      "promptAr": "🎁 أرسل عبارة المفاجأة الختامية التي تظهر في نهاية التجربة:",
+      "type": "textarea",
+      "required": false,
+      "placeholderAr": "دمتَ أجمل ما في الأيام!"
+    },
+    {
+      "key": "customStatement",
+      "labelAr": "عبارة صح أم غلط مخصصة",
+      "promptAr": "⚡ أرسل عبارة لتحدي «صح أم غلط» (مثال: أول لقاء بيننا كان يوم خميس):",
+      "type": "text",
+      "required": false,
+      "placeholderAr": "أفضل مشروب لدي هو القوة المختصة"
+    }
+  ],
+  "config": {
+    "paletteId": "midnight-cosmos",
+    "themeColors": {
+      "primary": "#6366f1",
+      "secondary": "#818cf8",
+      "accent": "#38bdf8",
+      "background": "#060916",
+      "surface": "#10162f",
+      "text": "#eef2ff",
+      "mode": "dark"
+    },
+    "componentsConfig": {
+      "hero": "neon",
+      "background": "space",
+      "typography": "3d-text",
+      "button": "3d",
+      "gallery": "grid",
+      "sections": [
+        "statistics",
+        "final-surprise"
+      ],
+      "effects": [
+        "confetti",
+        "stars",
+        "smooth-transitions"
+      ],
+      "introStyle": "portal",
+      "liteModeDefault": false
+    },
+    "musicTrack": "joyful-chimes",
+    "sampleCustomFields": {
+      "statements": [
+        {
+          "text": "أجمل اللحظات هي التي تأتي دون تخطيط مسبق.",
+          "answer": true
+        },
+        {
+          "text": "يمكن نسيان المواقف المضحكة التي جمعتنا بسهولة.",
+          "answer": false
+        },
+        {
+          "text": "هذا الموقع صُمم خصيصاً لرسم ابتسامة حقيقية اليوم.",
+          "answer": true
+        },
+        {
+          "text": "المفاجأة الأجمل لم تظهر بعد حتى تنهي هذه الجولة!",
+          "answer": true
+        }
+      ]
+    },
+    "experienceType": "true-false-game"
+  },
+  "dependencies": [
+    "canvas-confetti"
+  ],
+  "compatibility": {
+    "browsers": [
+      "Chrome 90+",
+      "Safari 14+",
+      "Edge 90+",
+      "Firefox 88+",
+      "Samsung Internet 15+",
+      "Opera 76+",
+      "Android WebView",
+      "iOS Safari 14+"
+    ],
+    "responsive": [
+      "mobile-first",
+      "tablet",
+      "desktop"
+    ],
+    "inputs": [
+      "touch",
+      "mouse",
+      "keyboard"
+    ],
+    "reducedMotion": true,
+    "webglFallback": true,
+    "liteMode": true
+  },
+  "footer": "shared-global"
+}

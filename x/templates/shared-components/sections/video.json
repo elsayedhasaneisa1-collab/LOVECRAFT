@@ -1,0 +1,11 @@
+{
+  "componentGroup": "section",
+  "variantKey": "video",
+  "nameAr": "مشهد العرض المرئي",
+  "nameEn": "Video",
+  "descriptionAr": "مسرح عرض سينمائي للمفاجآت المرئية والشرائح المتحركة.",
+  "githubPath": "templates/shared-components/sections/video.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 9
+}

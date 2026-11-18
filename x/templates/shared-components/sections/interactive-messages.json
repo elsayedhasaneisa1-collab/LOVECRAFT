@@ -1,0 +1,11 @@
+{
+  "componentGroup": "section",
+  "variantKey": "interactive-messages",
+  "nameAr": "صندوق الرسائل التفاعلية",
+  "nameEn": "Interactive Messages",
+  "descriptionAr": "بطاقات ومظاريف تُفتح واحدة تلو الأخرى عند النقر.",
+  "githubPath": "templates/shared-components/sections/interactive-messages.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 11
+}

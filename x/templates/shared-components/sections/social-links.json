@@ -1,0 +1,11 @@
+{
+  "componentGroup": "section",
+  "variantKey": "social-links",
+  "nameAr": "منصات وروابط اجتماعية",
+  "nameEn": "Social Links",
+  "descriptionAr": "أزرار منظمة لجميع الحسابات والروابط الشخصية.",
+  "githubPath": "templates/shared-components/sections/social-links.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 8
+}

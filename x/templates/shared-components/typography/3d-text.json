@@ -1,0 +1,11 @@
+{
+  "componentGroup": "typography",
+  "variantKey": "3d-text",
+  "nameAr": "حروف بارزة ثلاثية الأبعاد",
+  "nameEn": "3D Text",
+  "descriptionAr": "طبقات ظل مجسمة تمنح العنوان حضوراً منحوتاً.",
+  "githubPath": "templates/shared-components/typography/3d-text.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 4
+}

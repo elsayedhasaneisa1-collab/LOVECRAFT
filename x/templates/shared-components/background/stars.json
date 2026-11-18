@@ -1,0 +1,11 @@
+{
+  "componentGroup": "background",
+  "variantKey": "stars",
+  "nameAr": "قبة النجوم المتلألئة",
+  "nameEn": "Stars",
+  "descriptionAr": "مئات النجوم الدقيقة بلمعان متفاوت في سماء صافية.",
+  "githubPath": "templates/shared-components/background/stars.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 3
+}

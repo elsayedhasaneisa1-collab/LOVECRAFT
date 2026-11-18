@@ -1,4 +1,4 @@
-import { and, count, desc, eq, inArray, isNull, lte, ne, sql } from "drizzle-orm";
+import { and, notInArray, count, desc, eq, inArray, isNull, lte, ne, sql } from "drizzle-orm";
 import { recordVisit } from "./analytics";
 import {
   db,
@@ -1061,7 +1061,7 @@ export async function createUserSite(input: CreateSiteInput): Promise<
               inArray(siteAssets.id, cleanIds),
               eq(siteAssets.userId, input.userId),
               isNull(siteAssets.siteId),
-              ne(siteAssets.provider, "vercel-blob-deleting")
+              notInArray(siteAssets.provider, ["vercel-blob-deleting", "catbox-deleting"])
             )
           );
       }

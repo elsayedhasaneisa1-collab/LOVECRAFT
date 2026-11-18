@@ -1,0 +1,11 @@
+{
+  "componentGroup": "section",
+  "variantKey": "contact",
+  "nameAr": "بطاقة التواصل والدعوة",
+  "nameEn": "Contact",
+  "descriptionAr": "تفاصيل التواصل أو تأكيد الحضور وتبادل التهاني.",
+  "githubPath": "templates/shared-components/sections/contact.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 7
+}

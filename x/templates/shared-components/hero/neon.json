@@ -1,0 +1,11 @@
+{
+  "componentGroup": "hero",
+  "variantKey": "neon",
+  "nameAr": "إضاءة نيون متوهجة",
+  "nameEn": "Neon",
+  "descriptionAr": "هالات ضوئية وإطارات نيون نابضة مثالية للألعاب والتجارب العصرية.",
+  "githubPath": "templates/shared-components/hero/neon.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 5
+}

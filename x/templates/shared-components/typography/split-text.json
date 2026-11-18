@@ -1,0 +1,11 @@
+{
+  "componentGroup": "typography",
+  "variantKey": "split-text",
+  "nameAr": "كلمات متتابعة Split Text",
+  "nameEn": "Split Text",
+  "descriptionAr": "دخول متسلسل كلمة تلو الأخرى بإيقاع بصري متزن.",
+  "githubPath": "templates/shared-components/typography/split-text.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 7
+}

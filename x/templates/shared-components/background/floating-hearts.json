@@ -1,0 +1,11 @@
+{
+  "componentGroup": "background",
+  "variantKey": "floating-hearts",
+  "nameAr": "قلوب طافية رقيقة",
+  "nameEn": "Floating Hearts",
+  "descriptionAr": "قلوب شفافة ترتفع بنعومة فائقة للقوالب الرومانسية.",
+  "githubPath": "templates/shared-components/background/floating-hearts.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 4
+}

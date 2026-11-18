@@ -11,7 +11,7 @@ import {
 } from "@/db";
 import { requireOwnerApi } from "@/lib/admin-auth";
 import { getClientIp, logAdminAudit, sanitizePlainText } from "@/lib/security";
-import { hasBlobStorage } from "@/lib/site-media";
+import { hasCatboxStorage } from "@/lib/site-media";
 
 export async function GET(req: NextRequest) {
   const auth = await requireOwnerApi(req);
@@ -46,7 +46,8 @@ export async function GET(req: NextRequest) {
   const envStatus = {
     botApiSecretConfigured: Boolean(process.env.BOT_API_SECRET?.trim()),
     githubTokenConfigured: Boolean(process.env.GITHUB_TOKEN?.trim()),
-    vercelBlobConfigured: hasBlobStorage(),
+    catboxConfigured: hasCatboxStorage(),
+    catboxUserhashConfigured: Boolean(process.env.CATBOX_USERHASH?.trim()),
     qrSigningConfigured: (process.env.QR_SIGNING_SECRET?.trim() || process.env.BOT_API_SECRET?.trim() || "").length >= 32,
     cronSecretConfigured: Boolean(process.env.CRON_SECRET?.trim()),
     databaseConnected: true,

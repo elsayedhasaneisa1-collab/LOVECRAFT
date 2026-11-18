@@ -1,0 +1,11 @@
+{
+  "componentGroup": "typography",
+  "variantKey": "glow",
+  "nameAr": "توهج ضوئي شاعري",
+  "nameEn": "Glow",
+  "descriptionAr": "هالة لونية محسوبة تحيط بالعناوين البارزة.",
+  "githubPath": "templates/shared-components/typography/glow.json",
+  "supportsLiteMode": true,
+  "requires3d": false,
+  "sortOrder": 3
+}
