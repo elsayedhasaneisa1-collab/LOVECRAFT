@@ -82,3 +82,7 @@ export async function attachablePhoto(userId: number, assetId: number) {
   )).limit(1);
   return Boolean(photo);
 }
+
+export function hasBlobStorage(): boolean {
+  return false;
+}
