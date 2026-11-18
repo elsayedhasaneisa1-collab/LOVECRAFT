@@ -1,13 +1,13 @@
 name: Create LOVECRAFT Owner
 
-"on":
-  workflow_dispatch:
+'on': [workflow_dispatch]
 
 permissions:
   contents: read
 
 jobs:
   create-owner:
+    name: Provision Owner Account
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
