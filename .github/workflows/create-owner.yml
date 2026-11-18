@@ -1,31 +1,26 @@
 name: Create LOVECRAFT Owner
 
-'on':
-workflow_dispatch:
+on:
+  workflow_dispatch:
 
 permissions:
-contents: read
+  contents: read
 
 jobs:
-create-owner:
-runs-on: ubuntu-latest
-timeout-minutes: 10
-steps:
-- name: Checkout repository
-uses: actions/checkout@v4
+  create-owner:
+    runs-on: ubuntu-latest
 
-  - name: Setup Node.js
-    uses: actions/setup-node@v4
-    with:
-      node-version: 22
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  - name: Install dependencies
-    run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-  - name: Create Owner Account
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      OWNER_USERNAME: ${{ secrets.OWNER_USERNAME }}
-      OWNER_EMAIL: ${{ secrets.OWNER_EMAIL }}
-      OWNER_PASSWORD: ${{ secrets.OWNER_PASSWORD }}
-    run: node scripts/create-owner.mjs
+      - name: Create Owner
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          OWNER_USERNAME: ${{ secrets.OWNER_USERNAME }}
+          OWNER_EMAIL: ${{ secrets.OWNER_EMAIL }}
+          OWNER_PASSWORD: ${{ secrets.OWNER_PASSWORD }}
+        run: node scripts/create-owner.mjs
